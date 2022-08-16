@@ -41,11 +41,8 @@ export default function Search(props) {
         setTesting(true);
 
         let model, labelContainer, maxPredictions;
-        console.log(selected);
         const modelJsonRef = ref(storage, `models/${selected.uid}/${selected.modelId}/model/model.json`);
-        const modelWeightRef = ref(modelJsonRef.parent, "model.weights.bin");
         const modelUrl = await getDownloadURL(modelJsonRef);
-        const weightUrl = await getDownloadURL(modelWeightRef);
 
         model = await tmImage.load(modelUrl);
         maxPredictions = model.getTotalClasses();
