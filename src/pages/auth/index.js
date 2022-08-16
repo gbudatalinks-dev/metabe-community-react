@@ -16,7 +16,7 @@ export default function SignIn(props) {
 
     const signInWithGoogle = () => {
         auth.setPersistence(browserSessionPersistence);
-        provider.addScope("https://www.googleapis.com/auth/drive.file");
+        provider.addScope("https://www.googleapis.com/auth/drive");
 
         auth.onAuthStateChanged((user) => {
             if (user) {

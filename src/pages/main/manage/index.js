@@ -5,13 +5,13 @@ import {
     Form, FormField, TextInput, FileInput, Button, Text, TextArea, Spinner
 } from "grommet";
 import { More } from "grommet-icons";
-// import axios from "axios";
+import axios from "axios";
 
 import { collection, query, where, getDocs, addDoc, updateDoc } from "firebase/firestore";
 import { ref, uploadBytes, getDownloadURL } from "firebase/storage";
 import { db, storage } from "../../../config/firebase";
 import { AppContext } from "../../../context";
-import { isEmptyStr, strStartsWith } from "../../../utils/strings";
+import { isEmptyStr } from "../../../utils/strings";
 
 function getExtension(filename) {
     const i = filename.lastIndexOf(".");
@@ -21,54 +21,54 @@ function getExtension(filename) {
 export default function Manage() {
 
     const [ models, setModels ] = React.useState([]);
+    const [ modelWeightFiles, setModelWeightsFiles ] = React.useState([]);
     const [ open, setOpen ] = React.useState(false);
     const [ name, setName ] = React.useState("");
     const [ cover, setCover ] = React.useState(undefined);
-    const [ model, setModel ] = React.useState(undefined);
-    const [ modelUrl, setModelUrl ] = React.useState("");
+    const [ modelJsonFile, setModelJsonFile ] = React.useState(undefined);
     const [ description, setDescription ] = React.useState("");
     const [ uploading, setUploading ] = React.useState(false);
 
     const { globalState } = React.useContext(AppContext);
 
-    React.useEffect(() => {
-        // loadFiles()
-        //     .then(files => {
-        //         setFiles(files);
-        //         console.log(globalState.user.uid);
-        //     });
-        if (uploading === false) {
-            onLoad()
-                .then(result => setModels(result));
+    const onLoadFromCloud = async () => {
+        const token = sessionStorage.getItem("GoogleAccessToken");
+
+        try {
+            const jsonFiles = await axios({
+                method: "get",
+                url: "https://www.googleapis.com/drive/v3/files",
+                headers: {"Authorization" : "Bearer " + token,
+                    "Content-Type" : "application/json"},
+                params: {
+                    "q": "mimeType = 'application/json'",
+                    "fields": 'files(name, id)',
+                    "spaces": 'drive',
+                },
+            });
+
+            setModels(jsonFiles.data.files);
+
+            const weightFiles = await axios({
+                method: "get",
+                url: "https://www.googleapis.com/drive/v3/files",
+                headers: {"Authorization" : "Bearer " + token,
+                    "Content-Type" : "application/json"},
+                params: {
+                    "q": "name contains 'weights.bin'",
+                    "fields": 'files(name, id)',
+                    "spaces": 'drive',
+                },
+            });
+
+            setModelWeightsFiles(weightFiles.data.files);
+
+        } catch(error) {
+            console.log(error);
         }
-    }, [globalState.user.uid, uploading]);
+    };
 
-    // const onLoad = async () => {
-    //     const token = sessionStorage.getItem("GoogleAccessToken");
-    //
-    //     try {
-    //         const files = await axios({
-    //             method: "get",
-    //             url: "https://www.googleapis.com/drive/v3/files",
-    //             headers: {
-    //                 "Authorization" : "Bearer " + token,
-    //                 "Content-Type" : "application/json"
-    //             },
-    //             params: {
-    //                 "q": "name = 'my-model-1.weights.bin'",
-    //                 "fields": "files(id,name)",
-    //                 "spaces": "drive",
-    //             },
-    //         });
-    //
-    //         return files.data.files;
-    //
-    //     } catch(error) {
-    //         console.log(error);
-    //     }
-    // };
-
-    const onLoad = async () => {
+    const updateModelsStatus = async () => {
         const q = query(collection(db, "models"), where("uid", "==", globalState.user.uid));
 
         const querySnapshot = await getDocs(q);
@@ -79,19 +79,24 @@ export default function Manage() {
             result.push(t);
         });
 
-        return result;
+        // TODO
     };
 
     const onUpload = async () => {
+        const fileName = modelJsonFile.name.split('.')[0];
+        const modelUri = `models/${globalState.user.uid}/${modelJsonFile.id}`;
+        const weightFile = modelWeightFiles.filter(f => f.name === `${fileName}.weights.bin`)[0];
+
         const docRef = await addDoc(collection(db, "models"), {
             name: name,
             uid: globalState.user.uid,
             description: description,
-            modelUrl: modelUrl,
+            modelId: modelJsonFile.id,
         });
 
-        const coverRef = ref(storage, `${docRef.id}/cover${getExtension(cover.name)}`);
-        // const modelRef = ref(storage, `${docRef.id}/model.bin`);
+        const coverRef = ref(storage, `${modelUri}/cover${getExtension(cover.name)}`);
+        const modelJsonFileRef = ref(storage, `${modelUri}/model/model.json`);
+        const modelWeightFileRef = ref(storage, `${modelUri}/model/model.weights.bin`);
 
         uploadBytes(coverRef, cover).then((snapshot) => {
             console.log(snapshot);
@@ -99,24 +104,51 @@ export default function Manage() {
                 .then(url => updateDoc(docRef, { cover: url }));
         });
 
-        // for (const file of model) {
-        //     const fileRef = ref(storage, `${docRef.id}/${file.name}`);
-        //     await uploadBytes(fileRef, file);
-        //     if (strStartsWith(file.name, "model.json")) {
-        //         getDownloadURL(fileRef)
-        //             .then(url => updateDoc(docRef, { model: url }));
-        //     }
-        //     else if (strStartsWith(file.name, "metadata.json")) {
-        //         getDownloadURL(fileRef)
-        //             .then(url => updateDoc(docRef, { metadata: url }));
-        //     }
-        // }
+        const token = sessionStorage.getItem("GoogleAccessToken");
+        let response;
 
-        // uploadBytes(modelRef, model).then((snapshot) => {
-        //     console.log(snapshot);
-        //     getDownloadURL(modelRef)
-        //         .then(url => updateDoc(docRef, { model: url }));
-        // });
+        try {
+            response = await axios({
+                method: "get",
+                url: "https://www.googleapis.com/drive/v3/files/" + modelJsonFile.id + "",
+                headers: {"Authorization" : "Bearer " + token,
+                    "Content-Type" : "application/json"},
+                params: {
+                    "alt": 'media',
+                },
+                responseType: "blob",
+            });
+
+            uploadBytes(modelJsonFileRef, response.data).then((snapshot) => {
+                console.log('Uploaded json file!');
+            });
+
+            response = await axios({
+                method: "get",
+                url: "https://www.googleapis.com/drive/v3/files/" + weightFile.id + "",
+                headers: {"Authorization" : "Bearer " + token,
+                    "Content-Type" : "application/json"},
+                params: {
+                    "alt": 'media',
+                },
+                responseType: "blob",
+            });
+
+            uploadBytes(modelWeightFileRef, response.data).then((snapshot) => {
+                console.log('Uploaded bin file!');
+            });
+
+        } catch(error) {
+            console.log(error);
+        }
+    };
+
+    const onOpen = () => setOpen(true);
+    const onClose = () => setOpen(false);
+
+    const onCreate = (id) => {
+        onOpen();
+        setModelJsonFile(models.filter(m => m.id === id)[0]);
     };
 
     const onModify = (id) => {
@@ -127,14 +159,10 @@ export default function Manage() {
         console.log(id);
     };
 
-    // const onOpen = (id) => setOpen(id);
-    const onOpen = () => setOpen(true);
-    const onClose = () => setOpen(false);
-
     const onReset = () => {
         setName("");
         setCover(undefined);
-        setModel(undefined);
+        setModelJsonFile(undefined);
         setDescription("");
         setUploading(false);
         onClose();
@@ -147,7 +175,7 @@ export default function Manage() {
             .then(() => {
                 setName("");
                 setCover(undefined);
-                setModel(undefined);
+                setModelJsonFile(undefined);
                 setDescription("");
                 onClose();
                 setUploading(false);
@@ -183,29 +211,9 @@ export default function Manage() {
                                         }}
                                     />
                                 </FormField>
-                                <FormField label="모델 URL" name="modelUrl" required error={isEmptyStr(modelUrl) ? "필수 항목입니다." : undefined}>
-                                    <TextInput name="modelUrl" value={modelUrl} onChange={(event) => setModelUrl(event.target.value)} />
+                                <FormField label="모델 파일" name="modelFile">
+                                    <TextInput name="modelFile" value={modelJsonFile.name} disabled />
                                 </FormField>
-                                {/*<FormField label="모델 파일 및 메타데이터" name="model">*/}
-                                {/*    <FileInput*/}
-                                {/*        multiple*/}
-                                {/*        accept=".bin, .json"*/}
-                                {/*        messages={{*/}
-                                {/*            browse: "선택",*/}
-                                {/*            dropPromptMultiple: "파일을 여기에 드래그 하세요.",*/}
-                                {/*            files: "파일 목록",*/}
-                                {/*            remove: "삭제",*/}
-                                {/*            removeAll: "모두 삭제",*/}
-                                {/*        }}*/}
-                                {/*        onChange={({ target: { files } }) => {*/}
-                                {/*            let temp = [];*/}
-                                {/*            for (let i = 0; i < files.length; i++) {*/}
-                                {/*                temp.push(files[i]);*/}
-                                {/*            }*/}
-                                {/*            setModel(temp);*/}
-                                {/*        }}*/}
-                                {/*    />*/}
-                                {/*</FormField>*/}
                                 <FormField label="모델 설명">
                                     <TextArea name="comments" placeholder={"설명을 입력해 주세요."} onChange={(event) => setDescription(event.target.value)} />
                                 </FormField>
@@ -252,6 +260,7 @@ export default function Manage() {
                                   action={(item, index) => (
                                       <Menu key={index} icon={<More />}
                                             items={[
+                                                { label: "등록", onClick: () => onCreate(item.id) },
                                                 { label: "수정", onClick: () => onModify(item.id) },
                                                 { label: "삭제", onClick: () => onDelete(item.id) }
                                             ]}
@@ -271,10 +280,10 @@ export default function Manage() {
                             <Button
                                 label={
                                     <Text color="white">
-                                        <strong>등록하기</strong>
+                                        <strong>클라우드 모델 동기화</strong>
                                     </Text>
                                 }
-                                onClick={onOpen}
+                                onClick={onLoadFromCloud}
                                 primary
                             />
                         </Box>

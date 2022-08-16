@@ -41,12 +41,13 @@ export default function Search(props) {
         setTesting(true);
 
         let model, labelContainer, maxPredictions;
+        console.log(selected);
+        const modelJsonRef = ref(storage, `models/${selected.uid}/${selected.modelId}/model/model.json`);
+        const modelWeightRef = ref(modelJsonRef.parent, "model.weights.bin");
+        const modelUrl = await getDownloadURL(modelJsonRef);
+        const weightUrl = await getDownloadURL(modelWeightRef);
 
-        const url = selected.modelUrl;
-        const modelUrl = url + "model.json";
-        const metaDataUrl = url + "metadata.json";
-
-        model = await tmImage.load(modelUrl, metaDataUrl);
+        model = await tmImage.load(modelUrl);
         maxPredictions = model.getTotalClasses();
         labelContainer = document.getElementById("label-container");
         for (let i = 0; i < maxPredictions; i++) { // and class labels
