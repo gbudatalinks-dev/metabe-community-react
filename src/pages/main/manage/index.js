@@ -2,7 +2,7 @@ import React from "react";
 
 import {
     Box, Card, CardHeader, CardBody, CardFooter, Heading, List, Menu, Layer,
-    Form, FormField, TextInput, FileInput, Button, Text, TextArea, Spinner, Grid, Image
+    Form, FormField, TextInput, FileInput, Button, Text, TextArea, Spinner
 } from "grommet";
 import { More } from "grommet-icons";
 import axios from "axios";
