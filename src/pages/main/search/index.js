@@ -6,7 +6,6 @@ import {
 } from "grommet";
 import { Search as SearchIcon } from "grommet-icons";
 
-import * as tf from "@tensorflow/tfjs";
 import * as tmImage from "@teachablemachine/image";
 
 import { collection, getDocs } from "firebase/firestore";
