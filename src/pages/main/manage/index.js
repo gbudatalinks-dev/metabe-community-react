@@ -2,7 +2,7 @@ import React from "react";
 
 import {
     Box, Card, CardHeader, CardBody, CardFooter, Heading, List, Menu, Layer,
-    Form, FormField, TextInput, FileInput, Button, Text, TextArea, Spinner
+    Form, FormField, TextInput, FileInput, Button, Text, TextArea, Spinner, Grid, Image
 } from "grommet";
 import { More } from "grommet-icons";
 import axios from "axios";
@@ -21,6 +21,7 @@ function getExtension(filename) {
 export default function Manage() {
 
     const [ models, setModels ] = React.useState([]);
+    const [ cloudModels, setCloudModels ] = React.useState([]);
     const [ modelWeightFiles, setModelWeightsFiles ] = React.useState([]);
     const [ open, setOpen ] = React.useState(false);
     const [ name, setName ] = React.useState("");
@@ -30,8 +31,31 @@ export default function Manage() {
     const [ description, setDescription ] = React.useState("");
     const [ uploading, setUploading ] = React.useState(false);
     const [ isTM, setIsTM ] = React.useState(false);
+    const [ isLoadedFromCloud, setIsLoadedFromCloud ] = React.useState(false);
 
     const { globalState } = React.useContext(AppContext);
+
+    React.useEffect(() => {
+        if (uploading === false) {
+            onLoad()
+                .then(result => setModels(result));
+        }
+        // eslint-disable-next-line
+    }, [globalState.user.uid, uploading]);
+
+    const onLoad = async () => {
+        const q = query(collection(db, "models"), where("uid", "==", globalState.user.uid));
+
+        const querySnapshot = await getDocs(q);
+        const result = [];
+        let t;
+        querySnapshot.forEach((doc) => {
+            t = { ...doc.data(), id: doc.id };
+            result.push(t);
+        });
+
+        return result;
+    };
 
     const onLoadFromCloud = async () => {
         const token = sessionStorage.getItem("GoogleAccessToken");
@@ -49,7 +73,7 @@ export default function Manage() {
                 },
             });
 
-            setModels(jsonFiles.data.files);
+            setCloudModels(jsonFiles.data.files);
 
             const weightFiles = await axios({
                 method: "get",
@@ -64,24 +88,11 @@ export default function Manage() {
             });
 
             setModelWeightsFiles(weightFiles.data.files);
+            setIsLoadedFromCloud(true);
 
         } catch(error) {
             console.log(error);
         }
-    };
-
-    const updateModelsStatus = async () => {
-        const q = query(collection(db, "models"), where("uid", "==", globalState.user.uid));
-
-        const querySnapshot = await getDocs(q);
-        const result = [];
-        let t;
-        querySnapshot.forEach((doc) => {
-            t = { ...doc.data(), id: doc.id };
-            result.push(t);
-        });
-
-        // TODO
     };
 
     const onUpload = async () => {
@@ -160,8 +171,8 @@ export default function Manage() {
     const onClose = () => setOpen(false);
 
     const onCreate = (id) => {
+        setModelJsonFile(cloudModels.filter(m => m.id === id)[0]);
         onOpen();
-        setModelJsonFile(models.filter(m => m.id === id)[0]);
     };
 
     const onCreateWithTMModel = () => {
@@ -194,6 +205,8 @@ export default function Manage() {
             .then(() => {
                 onReset();
                 setUploading(false);
+                onLoad()
+                    .then(result => setModels(result));
             });
     };
 
@@ -275,25 +288,63 @@ export default function Manage() {
                             모델 관리
                         </Heading>
                     </CardHeader>
-                    <CardBody fill="vertical">
-                        <Box pad="medium">
-                            <List data={models}
-                                  pad={{ left: "small", right: "none" }}
-                                  action={(item, index) => (
-                                      <Menu key={index} icon={<More />}
-                                            items={[
-                                                { label: "등록", onClick: () => onCreate(item.id) },
-                                                { label: "수정", onClick: () => onModify(item.id) },
-                                                { label: "삭제", onClick: () => onDelete(item.id) }
-                                            ]}
-                                      />
-                                  )}
-                            >
-                                {(datum) => (
-                                    <Text weight="bold">{ datum.name }</Text>
-                                )}
-                            </List>
-                        </Box>
+                    <CardBody fill="vertical" gap="medium">
+                        <Card pad="medium" background="light-1" flex={"grow"}>
+                            <CardHeader margin={{ "bottom": "xsmall" }}>
+                                <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>
+                                    등록된 모델
+                                </Heading>
+                            </CardHeader>
+                            <CardBody fill="vertical">
+                                <List data={models}
+                                      pad={{ left: "small", right: "none" }}
+                                      action={(item, index) => (
+                                          <Menu key={index} icon={<More />}
+                                                items={[
+                                                    { label: "등록", onClick: () => onCreate(item.id) },
+                                                    { label: "수정", onClick: () => onModify(item.id) },
+                                                    { label: "삭제", onClick: () => onDelete(item.id) }
+                                                ]}
+                                          />
+                                      )}
+                                >
+                                    {(datum) => (
+                                        <Text weight="bold">{ datum.name }</Text>
+                                    )}
+                                </List>
+                            </CardBody>
+                            <CardFooter>
+                            </CardFooter>
+                        </Card>
+                        { isLoadedFromCloud &&
+                            <Card pad="medium" background="light-1" flex={"grow"}>
+                                <CardHeader margin={{ "bottom": "xsmall" }}>
+                                    <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>
+                                        클라우드 등록 모델
+                                    </Heading>
+                                </CardHeader>
+                                <CardBody fill="vertical">
+                                    <List data={cloudModels}
+                                          pad={{ left: "small", right: "none" }}
+                                          action={(item, index) => (
+                                              <Menu key={index} icon={<More />}
+                                                    items={[
+                                                        { label: "등록", onClick: () => onCreate(item.id) },
+                                                        { label: "수정", onClick: () => onModify(item.id) },
+                                                        { label: "삭제", onClick: () => onDelete(item.id) }
+                                                    ]}
+                                              />
+                                          )}
+                                    >
+                                        {(datum) => (
+                                            <Text weight="bold">{ datum.name }</Text>
+                                        )}
+                                    </List>
+                                </CardBody>
+                                <CardFooter>
+                                </CardFooter>
+                            </Card>
+                        }
                     </CardBody>
                     <CardFooter>
                         <Box as="footer" gap="small" direction="row" align="center" justify="end"

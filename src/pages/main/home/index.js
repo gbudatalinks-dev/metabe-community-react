@@ -79,7 +79,7 @@ export default function Home() {
                                         </Text>
                                     </CardHeader>
                                     <CardBody round={"xsmall"} overflow={"hidden"}>
-                                        <Image src={datum.url} />
+                                        <Image src={datum.url} fit={"contain"} />
                                     </CardBody>
                                     <CardFooter pad={{ top: "small", bottom: "xsmall" }}>
                                         <Text margin="none">
@@ -109,7 +109,7 @@ export default function Home() {
                                         </Text>
                                     </CardHeader>
                                     <CardBody round={"xsmall"} overflow={"hidden"}>
-                                        <Image src={datum.url} />
+                                        <Image src={datum.url} fit={"contain"} />
                                     </CardBody>
                                     <CardFooter pad={{ top: "small", bottom: "xsmall" }}>
                                         <Text margin="none">

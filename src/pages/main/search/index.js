@@ -112,7 +112,7 @@ export default function Search(props) {
                                 />
                             </FormField>
                             <Box>
-                                { image !== undefined && <Image src={image} id={"preview"} /> }
+                                { image !== undefined && <Image src={image} id={"preview"} fit={"contain"} /> }
                                 <div id="label-container"></div>
                             </Box>
                             <Box as="footer" gap="small" direction="row" align="center" justify="end"
@@ -163,7 +163,7 @@ export default function Search(props) {
                                         </Text>
                                     </CardHeader>
                                     <CardBody round={"xsmall"} overflow={"hidden"}>
-                                        <Image src={datum.cover} />
+                                        <Image src={datum.cover} fit={"contain"} />
                                     </CardBody>
                                     <CardFooter pad={{ top: "small", bottom: "xsmall" }}>
                                         <Text margin="none">
