@@ -26,8 +26,10 @@ export default function Manage() {
     const [ name, setName ] = React.useState("");
     const [ cover, setCover ] = React.useState(undefined);
     const [ modelJsonFile, setModelJsonFile ] = React.useState(undefined);
+    const [ modelUrl, setModelUrl ] = React.useState("");
     const [ description, setDescription ] = React.useState("");
     const [ uploading, setUploading ] = React.useState(false);
+    const [ isTM, setIsTM ] = React.useState(false);
 
     const { globalState } = React.useContext(AppContext);
 
@@ -83,63 +85,74 @@ export default function Manage() {
     };
 
     const onUpload = async () => {
-        const fileName = modelJsonFile.name.split('.')[0];
-        const modelUri = `models/${globalState.user.uid}/${modelJsonFile.id}`;
-        const weightFile = modelWeightFiles.filter(f => f.name === `${fileName}.weights.bin`)[0];
+        const modelUri = isTM ? `models/${globalState.user.uid}/tm_${new Date().getTime()}` : `models/${globalState.user.uid}/${modelJsonFile.id}`;
 
-        const docRef = await addDoc(collection(db, "models"), {
+        const data = isTM ? {
+            name: name,
+            uid: globalState.user.uid,
+            description: description,
+            modelUrl: modelUrl,
+        } : {
             name: name,
             uid: globalState.user.uid,
             description: description,
             modelId: modelJsonFile.id,
-        });
+        };
 
+        const docRef = await addDoc(collection(db, "models"), data);
+
+        // Cover Upload
         const coverRef = ref(storage, `${modelUri}/cover${getExtension(cover.name)}`);
-        const modelJsonFileRef = ref(storage, `${modelUri}/model/model.json`);
-        const modelWeightFileRef = ref(storage, `${modelUri}/model/model.weights.bin`);
-
         uploadBytes(coverRef, cover).then((snapshot) => {
-            console.log(snapshot);
             getDownloadURL(coverRef)
                 .then(url => updateDoc(docRef, { cover: url }));
         });
 
-        const token = sessionStorage.getItem("GoogleAccessToken");
-        let response;
+        if (isTM === false) {
+            // Model Upload from Google Cloud
+            const fileName = modelJsonFile.name.split('.')[0];
+            const weightFile = modelWeightFiles.filter(f => f.name === `${fileName}.weights.bin`)[0];
 
-        try {
-            response = await axios({
-                method: "get",
-                url: "https://www.googleapis.com/drive/v3/files/" + modelJsonFile.id + "",
-                headers: {"Authorization" : "Bearer " + token,
-                    "Content-Type" : "application/json"},
-                params: {
-                    "alt": 'media',
-                },
-                responseType: "blob",
-            });
+            const modelJsonFileRef = ref(storage, `${modelUri}/model/model.json`);
+            const modelWeightFileRef = ref(storage, `${modelUri}/model/model.weights.bin`);
 
-            uploadBytes(modelJsonFileRef, response.data).then((snapshot) => {
-                console.log('Uploaded json file!');
-            });
+            const token = sessionStorage.getItem("GoogleAccessToken");
+            let response;
 
-            response = await axios({
-                method: "get",
-                url: "https://www.googleapis.com/drive/v3/files/" + weightFile.id + "",
-                headers: {"Authorization" : "Bearer " + token,
-                    "Content-Type" : "application/json"},
-                params: {
-                    "alt": 'media',
-                },
-                responseType: "blob",
-            });
+            try {
+                response = await axios({
+                    method: "get",
+                    url: "https://www.googleapis.com/drive/v3/files/" + modelJsonFile.id + "",
+                    headers: {"Authorization" : "Bearer " + token,
+                        "Content-Type" : "application/json"},
+                    params: {
+                        "alt": 'media',
+                    },
+                    responseType: "blob",
+                });
 
-            uploadBytes(modelWeightFileRef, response.data).then((snapshot) => {
-                console.log('Uploaded bin file!');
-            });
+                uploadBytes(modelJsonFileRef, response.data).then((snapshot) => {
+                    console.log('Uploaded json file!');
+                });
 
-        } catch(error) {
-            console.log(error);
+                response = await axios({
+                    method: "get",
+                    url: "https://www.googleapis.com/drive/v3/files/" + weightFile.id + "",
+                    headers: {"Authorization" : "Bearer " + token,
+                        "Content-Type" : "application/json"},
+                    params: {
+                        "alt": 'media',
+                    },
+                    responseType: "blob",
+                });
+
+                uploadBytes(modelWeightFileRef, response.data).then((snapshot) => {
+                    console.log('Uploaded bin file!');
+                });
+
+            } catch(error) {
+                console.log(error);
+            }
         }
     };
 
@@ -149,6 +162,11 @@ export default function Manage() {
     const onCreate = (id) => {
         onOpen();
         setModelJsonFile(models.filter(m => m.id === id)[0]);
+    };
+
+    const onCreateWithTMModel = () => {
+        setIsTM(true);
+        onOpen();
     };
 
     const onModify = (id) => {
@@ -163,21 +181,18 @@ export default function Manage() {
         setName("");
         setCover(undefined);
         setModelJsonFile(undefined);
+        setModelUrl("");
         setDescription("");
         setUploading(false);
+        setIsTM(false);
         onClose();
     };
 
     const onSubmit = () => {
-        console.log("submit");
         setUploading(true);
         onUpload()
             .then(() => {
-                setName("");
-                setCover(undefined);
-                setModelJsonFile(undefined);
-                setDescription("");
-                onClose();
+                onReset();
                 setUploading(false);
             });
     };
@@ -211,9 +226,16 @@ export default function Manage() {
                                         }}
                                     />
                                 </FormField>
-                                <FormField label="모델 파일" name="modelFile">
-                                    <TextInput name="modelFile" value={modelJsonFile.name} disabled />
-                                </FormField>
+                                { isTM === false &&
+                                    <FormField label="모델 파일" name="modelFile">
+                                        <TextInput name="modelFile" value={modelJsonFile.name} disabled />
+                                    </FormField>
+                                }
+                                { isTM === true &&
+                                    <FormField label="모델 URL" name="modelUrl" required error={isEmptyStr(modelUrl) ? "필수 항목입니다." : undefined}>
+                                        <TextInput name="modelUrl" value={modelUrl} onChange={(event) => setModelUrl(event.target.value)} />
+                                    </FormField>
+                                }
                                 <FormField label="모델 설명">
                                     <TextArea name="comments" placeholder={"설명을 입력해 주세요."} onChange={(event) => setDescription(event.target.value)} />
                                 </FormField>
@@ -284,6 +306,15 @@ export default function Manage() {
                                     </Text>
                                 }
                                 onClick={onLoadFromCloud}
+                                primary
+                            />
+                            <Button
+                                label={
+                                    <Text color="white">
+                                        <strong>TM 모델 등록</strong>
+                                    </Text>
+                                }
+                                onClick={onCreateWithTMModel}
                                 primary
                             />
                         </Box>

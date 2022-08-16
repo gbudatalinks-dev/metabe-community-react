@@ -39,11 +39,21 @@ export default function Search(props) {
     const onTest = async () => {
         setTesting(true);
 
-        let model, labelContainer, maxPredictions;
-        const modelJsonRef = ref(storage, `models/${selected.uid}/${selected.modelId}/model/model.json`);
-        const modelUrl = await getDownloadURL(modelJsonRef);
+        let model, modelUrl, labelContainer, maxPredictions;
+        const isTM = selected.modelUrl !== undefined;
 
-        model = await tmImage.load(modelUrl);
+        if (isTM) {
+            const url = selected.modelUrl;
+            const modelUrl = url + "model.json";
+            const metaDataUrl = url + "metadata.json";
+            model = await tmImage.load(modelUrl, metaDataUrl);
+        }
+        else {
+            const modelJsonRef = ref(storage, `models/${selected.uid}/${selected.modelId}/model/model.json`);
+            modelUrl = await getDownloadURL(modelJsonRef);
+            model = await tmImage.load(modelUrl);
+        }
+
         maxPredictions = model.getTotalClasses();
         labelContainer = document.getElementById("label-container");
         for (let i = 0; i < maxPredictions; i++) { // and class labels
@@ -109,7 +119,7 @@ export default function Search(props) {
                                  pad={{ top: "medium", bottom: "small" }}
                             >
                                 <Button
-                                    label="취소"
+                                    label="닫기"
                                     color="dark-3"
                                     onClick={onClose}
                                 />
