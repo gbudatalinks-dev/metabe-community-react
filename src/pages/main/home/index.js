@@ -2,63 +2,40 @@ import React from "react";
 
 import { Box, Card, CardHeader, CardBody, CardFooter, Heading, Text, Grid, Image } from "grommet";
 
-const TEMP_DATA_1 = [
-    {
-        name: "Model #1",
-        url: "https://picsum.photos/id/0/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #2",
-        url: "https://picsum.photos/id/237/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #3",
-        url: "https://picsum.photos/id/1060/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #4",
-        url: "https://picsum.photos/id/1062/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #5",
-        url: "https://picsum.photos/id/1080/200",
-        desc: "desc...",
-    },
-];
-
-const TEMP_DATA_2 = [
-    {
-        name: "Model #6",
-        url: "https://picsum.photos/id/111/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #7",
-        url: "https://picsum.photos/id/133/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #2",
-        url: "https://picsum.photos/id/237/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #8",
-        url: "https://picsum.photos/id/250/200",
-        desc: "desc...",
-    },
-    {
-        name: "Model #9",
-        url: "https://picsum.photos/id/535/200",
-        desc: "desc...",
-    },
-];
+import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+import { db } from "../../../config/firebase";
 
 export default function Home() {
+
+    const [ newest, setNewest ] = React.useState([]);
+    const [ hottest, setHottest ] = React.useState([]);
+
+    React.useEffect(() => {
+        const loadNewest = async () => {
+            const q = query(collection(db, "models"), orderBy("datetime"), limit(5));
+            const querySnapshot = await getDocs(q);
+            const result = [];
+            let t;
+            querySnapshot.forEach((doc) => {
+                t = { ...doc.data(), id: doc.id };
+                result.push(t);
+            });
+            setNewest(result);
+        };
+        const loadHottest = async () => {
+            const q = query(collection(db, "models"), orderBy("testCount"), limit(5));
+            const querySnapshot = await getDocs(q);
+            const result = [];
+            let t;
+            querySnapshot.forEach((doc) => {
+                t = { ...doc.data(), id: doc.id };
+                result.push(t);
+            });
+            setHottest(result);
+        };
+
+        loadNewest().then(() => loadHottest());
+    }, []);
 
     return (
         <>
@@ -71,7 +48,7 @@ export default function Home() {
                     </CardHeader>
                     <CardBody fill="vertical">
                         <Grid columns={{ count: 5, size: "auto" }} gap={"small"}>
-                            { TEMP_DATA_1.map((datum, index) =>
+                            { newest.map((datum, index) =>
                                 <Card key={index} pad={"small"}>
                                     <CardHeader pad={{ top: "xsmall", bottom: "small" }}>
                                         <Text margin="none">
@@ -79,12 +56,9 @@ export default function Home() {
                                         </Text>
                                     </CardHeader>
                                     <CardBody round={"xsmall"} overflow={"hidden"}>
-                                        <Image src={datum.url} fit={"contain"} />
+                                        <Image src={datum.cover} fit={"contain"} />
                                     </CardBody>
-                                    <CardFooter pad={{ top: "small", bottom: "xsmall" }}>
-                                        <Text margin="none">
-                                            { datum.desc }
-                                        </Text>
+                                    <CardFooter pad={{ vertical: "xsmall" }}>
                                     </CardFooter>
                                 </Card>
                             )}
@@ -101,7 +75,7 @@ export default function Home() {
                     </CardHeader>
                     <CardBody fill="vertical">
                         <Grid columns={{ count: 5, size: "auto" }} gap={"small"}>
-                            { TEMP_DATA_2.map((datum, index) =>
+                            { hottest.map((datum, index) =>
                                 <Card key={index} pad={"small"}>
                                     <CardHeader pad={{ top: "xsmall", bottom: "small" }}>
                                         <Text margin="none">
@@ -109,12 +83,9 @@ export default function Home() {
                                         </Text>
                                     </CardHeader>
                                     <CardBody round={"xsmall"} overflow={"hidden"}>
-                                        <Image src={datum.url} fit={"contain"} />
+                                        <Image src={datum.cover} fit={"contain"} />
                                     </CardBody>
-                                    <CardFooter pad={{ top: "small", bottom: "xsmall" }}>
-                                        <Text margin="none">
-                                            { datum.desc }
-                                        </Text>
+                                    <CardFooter pad={{ vertical: "xsmall" }}>
                                     </CardFooter>
                                 </Card>
                             )}
