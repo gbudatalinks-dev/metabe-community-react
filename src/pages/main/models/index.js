@@ -44,7 +44,7 @@ export default function Models(props) {
     const [ finished, setFinished ] = React.useState(false);
     const [ data, setData ] = React.useState(undefined);
 
-    let model, webcam, ctx, labelContainer, maxPredictions;
+    let model, webcam, ctx, labelContainer;
 
     React.useEffect(() => {
         const loadModel = async () => {
@@ -61,7 +61,6 @@ export default function Models(props) {
 
         loadModel().then(result => {
             if (result.type === "POSE") {
-                console.log("pose")
                 testWithWebcam(result.url);
             }
         });
@@ -78,12 +77,8 @@ export default function Models(props) {
         const modelInfoUrl = url + "model.json";
         const metaDataUrl = url + "metadata.json";
         model = await tmPose.load(modelInfoUrl, metaDataUrl);
-        maxPredictions = model.getTotalClasses();
 
         labelContainer = document.getElementById("label-container");
-        for (let i = 0; i < maxPredictions; i++) { // and class labels
-            labelContainer.appendChild(document.createElement("div"));
-        }
 
         const size = 480;
         const flip = true; // whether to flip the webcam
@@ -110,26 +105,35 @@ export default function Models(props) {
         const { pose, posenetOutput } = await model.estimatePose(webcam.canvas);
         const prediction = await model.predict(posenetOutput);
 
-        for (let i = 0; i < maxPredictions; i++) {
-            const classPrediction =
-                prediction[i].className + ": " + prediction[i].probability.toFixed(2);
-            labelContainer.childNodes[i].innerHTML = classPrediction;
-        }
+        let labelNames = [], probabilities = [];
+        prediction.forEach(p => {
+            labelNames.push(p.className);
+            probabilities.push(p.probability * 100);
+        });
 
-        // let maxValue = 0, label = undefined;;
-        // prediction.forEach(p => {
-        //     if (p.probability > maxValue) {
-        //         maxValue = p.probability;
-        //         label = p.className;
-        //     }
-        // });
-        //
-        // labels.forEach(l => {
-        //     if (l.name === label) {
-        //         labelContainer.innerHTML = l.description;
-        //     }
-        // });
-
+        setData({
+            labels: labelNames,
+            datasets: [{
+                data: probabilities,
+                backgroundColor: [
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                    'rgba(75, 192, 192, 0.2)',
+                    'rgba(153, 102, 255, 0.2)',
+                    'rgba(255, 159, 64, 0.2)'
+                ],
+                borderColor: [
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(255, 206, 86, 1)',
+                    'rgba(75, 192, 192, 1)',
+                    'rgba(153, 102, 255, 1)',
+                    'rgba(255, 159, 64, 1)'
+                ],
+                borderWidth: 1
+            }]
+        });
 
         // finally draw the poses
         drawPose(pose);
