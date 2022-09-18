@@ -34,7 +34,7 @@ export default function Search(props) {
         return result;
     };
 
-    const onTest = async () => {
+    // const onTest = async () => {
 
         // let model, modelUrl, labelContainer, maxPredictions;
         // const isTM = selected.modelUrl !== undefined;
@@ -65,7 +65,7 @@ export default function Search(props) {
         //     labelContainer.childNodes[i].innerHTML = classPrediction;
         // }
 
-    };
+    // };
 
     const route = (id) => {
         navigate(`/main/models/${id}`);

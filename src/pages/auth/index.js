@@ -12,42 +12,41 @@ import { AppContext } from "../../context";
 export default function SignIn(props) {
 
     const navigate = useNavigate();
-    const { signIn } = React.useContext(AppContext);
+    const { signInAction } = React.useContext(AppContext);
 
     const signInWithGoogle = () => {
         auth.setPersistence(browserSessionPersistence);
         provider.addScope("https://www.googleapis.com/auth/drive");
 
-        auth.onAuthStateChanged((user) => {
-            if (user) {
-                const token = sessionStorage.getItem("GoogleAccessToken");
-                console.log(user);
-                console.log("access token : " + token);
-                signIn(user);
-                navigate("/main");
-            }
-            else {
-                signInWithPopup(auth, provider).then((result) => {
-                    // This gives you a Google Access Token. You can use it to access Google APIs.
-                    const credential = GoogleAuthProvider.credentialFromResult(result);
-                    const token = credential.accessToken;
+        const user = auth.currentUser;
 
-                    // The signed-in user info.
-                    const user = result.user;
-                    console.log(user);
-                    console.log("access token : " + token)
-                    sessionStorage.setItem("GoogleAccessToken", token);
+        if (user) {
+            const token = sessionStorage.getItem("GoogleAccessToken");
+            console.log(user);
+            console.log("access token : " + token);
+            signInAction(user);
+            navigate("/main");
+        }
+        else {
+            signInWithPopup(auth, provider).then((result) => {
+                // This gives you a Google Access Token. You can use it to access Google APIs.
+                const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
 
-                    if (user !== null && user !== undefined) {
-                        signIn(user);
-                        navigate("/main");
-                    }
-                    else {
-                        console.error("User is undefined");
-                    }
-                });
-            }
-        });
+                // The signed-in user info.
+                console.log(result.user);
+                console.log("access token : " + token)
+                sessionStorage.setItem("GoogleAccessToken", token);
+
+                if (result.user !== null && result.user !== undefined) {
+                    signInAction(result.user);
+                    navigate("/main");
+                }
+                else {
+                    console.error("User is undefined");
+                }
+            });
+        }
     };
 
     return (

@@ -1,6 +1,6 @@
 import React from "react";
 import {
-    Box, Button, FileInput, Form, FormField, Heading, Layer, Spinner, Text, TextInput
+    Box, Button, FileInput, Form, FormField, Heading, Layer, Spinner, Text, TextInput, Select
 } from "grommet";
 import axios from "axios";
 import { CKEditor } from "@ckeditor/ckeditor5-react";
@@ -14,9 +14,12 @@ import { ImageUploadAdaptor } from "./ImageUploadAdaptor";
 import { isEmptyStr } from "../../../utils/strings";
 import { utcDateTime } from "../../../utils/datetime";
 
+const TYPES = ["IMAGE", "POSE"];
+
 export default function UploadTMModel({ uid, onRefresh, onClose }) {
 
     const [ uploading, setUploading ] = React.useState(false);
+    const [ type, setType ] = React.useState(TYPES[0]);
     const [ name, setName ] = React.useState("");
     const [ cover, setCover ] = React.useState(undefined);
     const [ modelUrl, setModelUrl ] = React.useState("");
@@ -78,6 +81,7 @@ export default function UploadTMModel({ uid, onRefresh, onClose }) {
             const url = await getDownloadURL(coverRef);
 
             await addDoc(collection(db, "models"), {
+                type: type,
                 name: name,
                 cover: url,
                 modelUrl: modelUrl,
@@ -112,6 +116,9 @@ export default function UploadTMModel({ uid, onRefresh, onClose }) {
                 공유하기
             </Heading>
             <Form onSubmit={submit} onReset={reset}>
+                <FormField label="모델 타입" name="modelType">
+                    <Select value={type} options={TYPES} onChange={({ option }) => setType(option)}/>
+                </FormField>
                 <FormField label="모델 URL" name="modelUrl" required error={modelError} onChange={testUrl}>
                     <TextInput name="modelUrl" value={modelUrl} onChange={testUrl} />
                 </FormField>

@@ -6,10 +6,12 @@ import {
 } from "grommet-icons";
 import { signOut } from "firebase/auth";
 import { auth } from "../../config/firebase";
+import { AppContext } from "../../context";
 
 export default function SideBar() {
 
-    let navigate = useNavigate();
+    const { signOutAction } = React.useContext(AppContext);
+    const navigate = useNavigate();
 
     const route = (path) => {
         navigate(path, { replace: true });
@@ -19,6 +21,7 @@ export default function SideBar() {
         signOut(auth).then(() => {
             // Sign-out successful.
             sessionStorage.clear();
+            signOutAction();
             navigate("/");
         }).catch((error) => {
             // An error happened.

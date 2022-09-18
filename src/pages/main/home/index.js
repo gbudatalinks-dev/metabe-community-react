@@ -1,4 +1,5 @@
 import React from "react";
+import { useNavigate } from "react-router-dom";
 
 import { Box, Card, CardHeader, CardBody, CardFooter, Heading, Text, Grid, Image } from "grommet";
 
@@ -7,10 +8,29 @@ import { db } from "../../../config/firebase";
 
 export default function Home() {
 
+    const navigate = useNavigate();
+
     const [ newest, setNewest ] = React.useState([]);
     const [ hottest, setHottest ] = React.useState([]);
 
     React.useEffect(() => {
+        const listAllUsers = (nextPageToken) => {
+            // TODO : install firebase-admin sdk (yarn add firebase-admin)
+            // auth.listUsers(1000, nextPageToken)
+            //     .then((listUsersResult) => {
+            //         listUsersResult.users.forEach((userRecord) => {
+            //             console.log('user', userRecord.toJSON());
+            //         });
+            //         if (listUsersResult.pageToken) {
+            //             // List next batch of users.
+            //             listAllUsers(listUsersResult.pageToken);
+            //         }
+            //     })
+            //     .catch((error) => {
+            //         console.log('Error listing users:', error);
+            //     });
+        };
+
         const loadNewest = async () => {
             const q = query(collection(db, "models"), orderBy("datetime"), limit(5));
             const querySnapshot = await getDocs(q);
@@ -22,6 +42,7 @@ export default function Home() {
             });
             setNewest(result);
         };
+
         const loadHottest = async () => {
             const q = query(collection(db, "models"), orderBy("testCount"), limit(5));
             const querySnapshot = await getDocs(q);
@@ -35,21 +56,26 @@ export default function Home() {
         };
 
         loadNewest().then(() => loadHottest());
+        listAllUsers();
     }, []);
+
+    const route = (id) => {
+        navigate(`/main/models/${id}`);
+    };
 
     return (
         <>
-            <Box pad="medium" background="background-back" flex={true} gap={"medium"} overflow="scroll">
-                <Card pad="medium" background="light-1" flex={"grow"}>
+            <Box pad={"medium"} background={"background-back"} flex={true} gap={"medium"} overflow={"scroll"}>
+                <Card pad={"medium"} background={"light-1"} flex={"grow"}>
                     <CardHeader margin={{ "bottom": "xsmall" }}>
                         <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>
                             새로 올라온 모델
                         </Heading>
                     </CardHeader>
-                    <CardBody fill="vertical">
+                    <CardBody fill={"vertical"}>
                         <Grid columns={{ count: 5, size: "auto" }} gap={"small"}>
                             { newest.map((datum, index) =>
-                                <Card key={index} pad={"small"}>
+                                <Card key={index} pad={"small"} onClick={() => route(datum.id)}>
                                     <CardHeader pad={{ top: "xsmall", bottom: "small" }}>
                                         <Text margin="none">
                                             { datum.name }
@@ -67,7 +93,7 @@ export default function Home() {
                     <CardFooter>
                     </CardFooter>
                 </Card>
-                <Card pad="medium" background="light-1" flex={"grow"}>
+                <Card pad={"medium"} background={"light-1"} flex={"grow"}>
                     <CardHeader margin={{ "bottom": "xsmall" }}>
                         <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>
                             인기 모델
