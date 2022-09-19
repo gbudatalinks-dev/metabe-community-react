@@ -35,10 +35,10 @@ export default function App() {
     const contextValue = React.useMemo(
         () => ({
             globalState: globalState,
-            signIn: (user) => {
+            signInAction: (user) => {
                 dispatch({ type: Action.SIGN_IN, data: user });
             },
-            signOut: () => {
+            signOutAction: () => {
                 dispatch({ type: Action.SIGN_OUT, data: undefined });
             },
         }),

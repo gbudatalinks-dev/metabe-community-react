@@ -4,13 +4,29 @@ import { Sidebar, Nav, Button, Box, Text } from "grommet";
 import {
     Logout, Help, AppsRounded, Search, Bookmark, ShareRounded, Configure
 } from "grommet-icons";
+import { signOut } from "firebase/auth";
+import { auth } from "../../config/firebase";
+import { AppContext } from "../../context";
 
 export default function SideBar() {
 
-    let navigate = useNavigate();
+    const { signOutAction } = React.useContext(AppContext);
+    const navigate = useNavigate();
 
     const route = (path) => {
         navigate(path, { replace: true });
+    };
+
+    const signOutWithGoogle = () => {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            sessionStorage.clear();
+            signOutAction();
+            navigate("/");
+        }).catch((error) => {
+            // An error happened.
+            console.log("[SignOut Error]", error);
+        });
     };
 
     return (
@@ -24,7 +40,7 @@ export default function SideBar() {
                 // </Avatar>
                 <Button margin={{ "vertical": "medium", "horizontal": "small" }} className="rounded disabled-focus" hoverIndicator
                     // tip={{ dropProps: { align: { left: "right" } }, content: "로그인" }}
-                        onClick={() => {}} // TODO
+                        onClick={() => signOutWithGoogle()} // TODO
                 >
                     <Box pad={"small"} direction={"row"} align={"center"} gap={"xsmall"}>
                         <Logout/>

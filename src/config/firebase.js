@@ -18,6 +18,17 @@ const firebaseConfig = {
     measurementId: "G-GD2PBW9WB8"
 };
 
+// For Development
+// const firebaseConfig = {
+//     apiKey: "AIzaSyDMnJk9ttrixTTIHOGknxHsNR3ghGohUF8",
+//     authDomain: "gbu-ai-web-community-dev.firebaseapp.com",
+//     projectId: "gbu-ai-web-community-dev",
+//     storageBucket: "gbu-ai-web-community-dev.appspot.com",
+//     messagingSenderId: "403051766912",
+//     appId: "1:403051766912:web:19288eabce39ddf2a5f265",
+//     measurementId: "G-394VTN99Y5"
+// };
+
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
 
