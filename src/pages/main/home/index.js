@@ -14,21 +14,8 @@ export default function Home() {
     const [ hottest, setHottest ] = React.useState([]);
 
     React.useEffect(() => {
-        const listAllUsers = (nextPageToken) => {
-            // TODO : install firebase-admin sdk (yarn add firebase-admin)
-            // auth.listUsers(1000, nextPageToken)
-            //     .then((listUsersResult) => {
-            //         listUsersResult.users.forEach((userRecord) => {
-            //             console.log('user', userRecord.toJSON());
-            //         });
-            //         if (listUsersResult.pageToken) {
-            //             // List next batch of users.
-            //             listAllUsers(listUsersResult.pageToken);
-            //         }
-            //     })
-            //     .catch((error) => {
-            //         console.log('Error listing users:', error);
-            //     });
+        const listAllUsers = () => {
+            // TODO
         };
 
         const loadNewest = async () => {
