@@ -44,7 +44,7 @@ export default function Models(props) {
     const [ finished, setFinished ] = React.useState(false);
     const [ data, setData ] = React.useState(undefined);
 
-    let model, webcam, ctx, labelContainer;
+    let model, webcam, ctx;
 
     React.useEffect(() => {
         const loadModel = async () => {
@@ -73,12 +73,19 @@ export default function Models(props) {
         // eslint-disable-next-line
     }, [modelId]);
 
+    const setLabelContainerValue = (value) => {
+        const labelContainer = document.getElementById("label-container");
+        if (labelContainer) {
+            labelContainer.innerHTML = value;
+        }
+    };
+
     const testWithWebcam = async (url) => {
         const modelInfoUrl = url + "model.json";
         const metaDataUrl = url + "metadata.json";
         model = await tmPose.load(modelInfoUrl, metaDataUrl);
 
-        labelContainer = document.getElementById("label-container");
+        // labelContainer = document.getElementById("label-container");
 
         const size = 480;
         const flip = true; // whether to flip the webcam
@@ -116,20 +123,20 @@ export default function Models(props) {
             datasets: [{
                 data: probabilities,
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(255, 159, 64, 0.2)"
                 ],
                 borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(255, 159, 64, 1)"
                 ],
                 borderWidth: 1
             }]
@@ -156,7 +163,6 @@ export default function Models(props) {
         const modelInfoUrl = modelUrl + "model.json";
         const metaDataUrl = modelUrl + "metadata.json";
         model = await tmImage.load(modelInfoUrl, metaDataUrl);
-        labelContainer = document.getElementById("label-container");
 
         const image = document.getElementById("preview");
         const prediction = await model.predict(image, false);
@@ -174,7 +180,7 @@ export default function Models(props) {
 
         labels.forEach(l => {
             if (l.name === label) {
-                labelContainer.innerHTML = l.description;
+                setLabelContainerValue(l.description);
             }
         });
 
@@ -186,20 +192,20 @@ export default function Models(props) {
             datasets: [{
                 data: probabilities,
                 backgroundColor: [
-                    'rgba(54, 162, 235, 0.2)',
-                    'rgba(255, 99, 132, 0.2)',
-                    'rgba(255, 206, 86, 0.2)',
-                    'rgba(75, 192, 192, 0.2)',
-                    'rgba(153, 102, 255, 0.2)',
-                    'rgba(255, 159, 64, 0.2)'
+                    "rgba(54, 162, 235, 0.2)",
+                    "rgba(255, 99, 132, 0.2)",
+                    "rgba(255, 206, 86, 0.2)",
+                    "rgba(75, 192, 192, 0.2)",
+                    "rgba(153, 102, 255, 0.2)",
+                    "rgba(255, 159, 64, 0.2)"
                 ],
                 borderColor: [
-                    'rgba(54, 162, 235, 1)',
-                    'rgba(255, 99, 132, 1)',
-                    'rgba(255, 206, 86, 1)',
-                    'rgba(75, 192, 192, 1)',
-                    'rgba(153, 102, 255, 1)',
-                    'rgba(255, 159, 64, 1)'
+                    "rgba(54, 162, 235, 1)",
+                    "rgba(255, 99, 132, 1)",
+                    "rgba(255, 206, 86, 1)",
+                    "rgba(75, 192, 192, 1)",
+                    "rgba(153, 102, 255, 1)",
+                    "rgba(255, 159, 64, 1)"
                 ],
                 borderWidth: 1
             }]
@@ -210,6 +216,7 @@ export default function Models(props) {
         setImagePreviewUrl(undefined);
         setData(undefined);
         setFinished(false);
+        setLabelContainerValue("");
     };
 
     return (
