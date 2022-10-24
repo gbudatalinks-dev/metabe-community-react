@@ -5,11 +5,20 @@ import { Box, Card, CardHeader, CardBody, Heading, Button } from "grommet";
 import { Google } from "grommet-icons";
 
 import { auth, provider } from "../../config/firebase";
-import { signInWithPopup, GoogleAuthProvider, browserSessionPersistence } from "firebase/auth";
+import { signInWithPopup, GoogleAuthProvider, browserSessionPersistence, signInWithCustomToken } from "firebase/auth";
 
 import { AppContext } from "../../context";
 
+import axios from "axios";
+//import { auth } from "../config/firebase";
+//import { signInWithCustomToken, browserSessionPersistence } from "firebase/auth";
+
 export default function SignIn(props) {
+
+    const CLIENT_ID = "a52e91ebb1900470b61f7abfc1b2a02d";
+    const REDIRECT_URI =  "http://localhost:3000";
+
+    const KAKAO_AUTH_URL = `https://kauth.kakao.com/oauth/authorize?client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&response_type=code`;
 
     const navigate = useNavigate();
     const { signInAction } = React.useContext(AppContext);
@@ -49,6 +58,73 @@ export default function SignIn(props) {
         }
     };
 
+    React.useEffect(() => {
+        let customToken;
+
+        //axios.defaults.withCredentials = true;
+
+        const code = new URL(window.location.href).searchParams.get("code");
+        console.log("Kakao auth code :: " + code);
+        if (code)
+        {
+            axios.post(`https://kauth.kakao.com/oauth/token?grant_type=authorization_code&client_id=${CLIENT_ID}&redirect_uri=${REDIRECT_URI}&code=${code}`
+                ,{
+                headers: {
+                    'Content-type': 'application/x-www-form-urlencoded;charset=utf-8'
+                }
+            }
+            ).then((res) => {
+                console.log(res);
+                console.log("kakao access token " + res.data.access_token);
+                axios({
+                    url: 'http://localhost:8089/verifyToken',
+                    method: 'post',
+                    data: {
+                        token: res.data.access_token
+                    }
+                })
+                .then(response => {
+                    console.log("get Firebase token : " + response.data.firebase_token);
+                    customToken = response.data.firebase_token;
+
+                    auth.setPersistence(browserSessionPersistence);
+        
+                    const user = auth.currentUser;
+                    
+                    if (user) {
+                        const token = sessionStorage.getItem("GoogleAccessToken");
+                        console.log(user);
+                        console.log("access token : " + token);
+                        signInAction(user);
+                        navigate("/main");
+                    }
+                    else
+                    {
+                        signInWithCustomToken(auth, customToken).then((result) => {
+            
+                            // The signed-in user info.
+                            console.log("kakao login succeeded " + result.user);
+            
+                            if (result.user !== null && result.user !== undefined) {
+                                signInAction(result.user);
+                                navigate("/main");
+                            }
+                            else {
+                                console.error("User is undefined");
+                            }
+                        });
+                    }
+
+                })
+                .catch(error => {
+                    console.log("Firebase token get failed : " + error);
+                });
+        
+                
+            })
+        }
+    }, [navigate, signInAction]);
+
     return (
         <Box justify="center" align="center" pad="large" fill>
             <Card pad="large" gap="medium">
@@ -59,6 +135,7 @@ export default function SignIn(props) {
                 </CardHeader>
                 <CardBody>
                     <Button icon={<Google />} size="large" label="구글로 로그인" onClick={() => signInWithGoogle()} primary />
+                    <a href={KAKAO_AUTH_URL}>Kakao Login</a>
                 </CardBody>
             </Card>
         </Box>
