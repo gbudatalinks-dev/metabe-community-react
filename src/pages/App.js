@@ -8,6 +8,7 @@ import { AppContext, Action, DEFAULT_STATE } from "../context";
 
 import SignIn from "./auth";
 import Main from "./main";
+import NaverSignIn from "./auth/NaverSignIn";
 
 export default function App() {
 
@@ -56,6 +57,7 @@ export default function App() {
                             fill={true}
                         >
                             <Routes>
+                                <Route path="/naversignin/*" element={<NaverSignIn />} />
                                 <Route path="/main/*" element={<Main />} />
                                 <Route path="/" element={<SignIn />} />
                                 <Route path="*" element={<SignIn />} />

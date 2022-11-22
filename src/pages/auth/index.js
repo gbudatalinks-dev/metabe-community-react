@@ -59,6 +59,30 @@ export default function SignIn(props) {
     };
 
     React.useEffect(() => {
+        // for naver login
+        
+        const { naver } = window
+        const NAVER_CLIENT_ID = "zaXYIjjfQhsx3MzNzraW";
+        const NAVER_CALLBACK_URL = "http://localhost:3000/#/naversignin/";
+    
+        const initializeNaverLogin = () => {
+            const naverLogin = new naver.LoginWithNaverId({
+                clientId: NAVER_CLIENT_ID,
+                callbackUrl: NAVER_CALLBACK_URL,     
+                isPopup: false,
+                loginButton: { color: 'green', type: 3, height: 58 },
+                callbackHandle: true,
+            });
+
+            naverLogin.init();
+
+        }
+
+        initializeNaverLogin();
+
+
+        // for Kakao login
+
         let customToken;
 
         //axios.defaults.withCredentials = true;
@@ -94,6 +118,7 @@ export default function SignIn(props) {
                     if (user) {
                         const token = sessionStorage.getItem("GoogleAccessToken");
                         console.log(user);
+            
                         console.log("access token : " + token);
                         signInAction(user);
                         navigate("/main");
@@ -104,7 +129,7 @@ export default function SignIn(props) {
             
                             // The signed-in user info.
                             console.log("kakao login succeeded " + result.user);
-            
+
                             if (result.user !== null && result.user !== undefined) {
                                 signInAction(result.user);
                                 navigate("/main");
@@ -136,6 +161,8 @@ export default function SignIn(props) {
                 <CardBody>
                     <Button icon={<Google />} size="large" label="구글로 로그인" onClick={() => signInWithGoogle()} primary />
                     <a href={KAKAO_AUTH_URL}>Kakao Login</a>
+                    <div id='naverIdLogin'>
+                    </div>
                 </CardBody>
             </Card>
         </Box>
