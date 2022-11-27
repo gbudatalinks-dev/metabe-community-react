@@ -47,7 +47,7 @@ export default function App() {
 
     return (
         <div className={classnames("app-content")}>
-            <Grommet theme={DEFAULT_THEME} themeMode={"light"} full>
+            <Grommet theme={DEFAULT_THEME} themeMode={"dark"} full>
                 <HashRouter>
                     <AppContext.Provider value={contextValue}>
                         <Box

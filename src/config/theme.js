@@ -4,24 +4,24 @@ export const DEFAULT_THEME = {
     global: {
         "colors": {
             "brand": {
-                "dark": "#7700cc",
-                "light": "#6600cc"
+                "dark": "#ff5a01",
+                "light": "#85cf81"
             },
             "background": {
-                "dark": "#111111",
+                "dark": "#0a0a0a",
                 "light": "#FFFFFF"
             },
             "background-back": {
-                "dark": "#111111",
+                "dark": "#0a0a0a",
                 "light": "#EEEEEE"
             },
             "background-front": {
-                "dark": "#222222",
+                "dark": "#1c1d24",
                 "light": "#FFFFFF"
             },
             "background-contrast": {
                 "dark": "#FFFFFF11",
-                "light": "#11111111"
+                "light": "#0a0a0a11"
             },
             "text": {
                 "dark": "#EEEEEE",
@@ -40,7 +40,7 @@ export const DEFAULT_THEME = {
                 "light": "#666666"
             },
             "border": {
-                "dark": "#444444",
+                "dark": "#1c1d24",
                 "light": "#CCCCCC"
             },
             "control": "brand",
@@ -85,7 +85,7 @@ export const DEFAULT_THEME = {
     "meter": {},
     "layer": {
         "background": {
-            "dark": "#111111",
+            "dark": "#0a0a0a",
             "light": "#FFFFFF"
         }
     },
@@ -197,4 +197,17 @@ export const DEFAULT_THEME = {
             }
         },
     },
+    textInput: {
+        container: {
+            extend: () => `
+                background: #1c1d24;
+                border-radius: 24px;
+            `
+        },
+        placeholder: {
+            extend: () => `
+                color: #cccccc;
+            `,
+        },
+    }
 };

@@ -37,6 +37,9 @@ export default function Manage() {
             result.push(t);
         });
 
+        console.log(globalState.user.uid);
+        console.log(result);
+
         return result;
     };
 
@@ -173,106 +176,104 @@ export default function Manage() {
     };
 
     return (
-        <>
-            <Box pad="medium" background="background-back" flex={true} overflow="scroll">
-                { open && (
-                    <Layer position={"center"}
-                           onClickOutside={onClose}
-                           onEsc={onClose}
-                    >
-                        <UploadTMModel uid={globalState.user.uid} onRefresh={onRefresh} onClose={onClose} />
-                    </Layer>
-                ) }
-                <Card pad="medium" background="light-1" flex={"grow"}>
-                    <CardHeader margin={{ "bottom": "xsmall" }}>
-                        <Heading level={"3"} style={{ fontFamily: "Noto Sans KR", fontWeight: 900 }}>
-                            모델 관리
-                        </Heading>
-                    </CardHeader>
-                    <CardBody fill="vertical" gap="medium">
-                        <Card pad="medium" background="light-1" flex={"grow"}>
-                            <CardHeader margin={{ "bottom": "xsmall" }}>
-                                <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>
-                                    등록된 모델
-                                </Heading>
-                            </CardHeader>
-                            <CardBody fill="vertical">
-                                <List data={models}
-                                      pad={{ left: "small", right: "none" }}
-                                      action={(item, index) => (
-                                          <Menu key={index} icon={<More />}
-                                                items={[
-                                                    { label: "수정", onClick: () => onModify(item.id) },
-                                                    { label: "삭제", onClick: () => onDelete(item.id) }
-                                                ]}
-                                          />
-                                      )}
-                                >
-                                    {(datum) => (
-                                        <Text weight="bold">{ datum.name }</Text>
-                                    )}
-                                </List>
-                            </CardBody>
-                            <CardFooter>
-                            </CardFooter>
-                        </Card>
-                        {/*{ isLoadedFromCloud &&*/}
-                        {/*    <Card pad="medium" background="light-1" flex={"grow"}>*/}
-                        {/*        <CardHeader margin={{ "bottom": "xsmall" }}>*/}
-                        {/*            <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>*/}
-                        {/*                클라우드 등록 모델*/}
-                        {/*            </Heading>*/}
-                        {/*        </CardHeader>*/}
-                        {/*        <CardBody fill="vertical">*/}
-                        {/*            <List data={cloudModels}*/}
-                        {/*                  pad={{ left: "small", right: "none" }}*/}
-                        {/*                  action={(item, index) => (*/}
-                        {/*                      <Menu key={index} icon={<More />}*/}
-                        {/*                            items={[*/}
-                        {/*                                { label: "수정", onClick: () => onModify(item.id) },*/}
-                        {/*                                { label: "삭제", onClick: () => onDelete(item.id) }*/}
-                        {/*                            ]}*/}
-                        {/*                      />*/}
-                        {/*                  )}*/}
-                        {/*            >*/}
-                        {/*                {(datum) => (*/}
-                        {/*                    <Text weight="bold">{ datum.name }</Text>*/}
-                        {/*                )}*/}
-                        {/*            </List>*/}
-                        {/*        </CardBody>*/}
-                        {/*        <CardFooter>*/}
-                        {/*        </CardFooter>*/}
-                        {/*    </Card>*/}
-                        {/*}*/}
-                    </CardBody>
-                    <CardFooter>
-                        <Box as="footer" gap="small" direction="row" align="center" justify="end"
-                             pad={{ top: "medium", bottom: "small" }}
-                        >
-                            <Button
-                                label={
-                                    <Text color="white">
-                                        <strong>클라우드 모델 동기화</strong>
-                                    </Text>
-                                }
-                                // onClick={onLoadFromCloud}
-                                primary
-                                disabled={true} // TODO : To be deleted
-                            />
-                            <Button
-                                label={
-                                    <Text color="white">
-                                        <strong>TM 모델 등록</strong>
-                                    </Text>
-                                }
-                                onClick={onCreateWithTMModel}
-                                primary
-                            />
-                        </Box>
-                    </CardFooter>
-                </Card>
-            </Box>
-        </>
+        <Box pad="medium" flex={true} overflow="scroll">
+            {/*{ open && (*/}
+            {/*    <Layer position={"center"}*/}
+            {/*           onClickOutside={onClose}*/}
+            {/*           onEsc={onClose}*/}
+            {/*    >*/}
+            {/*        <UploadTMModel uid={globalState.user.uid} onRefresh={onRefresh} onClose={onClose} />*/}
+            {/*    </Layer>*/}
+            {/*) }*/}
+            {/*<Card pad="medium" background="light-1" flex={"grow"}>*/}
+            {/*    <CardHeader margin={{ "bottom": "xsmall" }}>*/}
+            {/*        <Heading level={"3"} style={{ fontFamily: "Noto Sans KR", fontWeight: 900 }}>*/}
+            {/*            모델 관리*/}
+            {/*        </Heading>*/}
+            {/*    </CardHeader>*/}
+            {/*    <CardBody fill="vertical" gap="medium">*/}
+            {/*        <Card pad="medium" background="light-1" flex={"grow"}>*/}
+            {/*            <CardHeader margin={{ "bottom": "xsmall" }}>*/}
+            {/*                <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>*/}
+            {/*                    등록된 모델*/}
+            {/*                </Heading>*/}
+            {/*            </CardHeader>*/}
+            {/*            <CardBody fill="vertical">*/}
+            {/*                <List data={models}*/}
+            {/*                      pad={{ left: "small", right: "none" }}*/}
+            {/*                      action={(item, index) => (*/}
+            {/*                          <Menu key={index} icon={<More />}*/}
+            {/*                                items={[*/}
+            {/*                                    { label: "수정", onClick: () => onModify(item.id) },*/}
+            {/*                                    { label: "삭제", onClick: () => onDelete(item.id) }*/}
+            {/*                                ]}*/}
+            {/*                          />*/}
+            {/*                      )}*/}
+            {/*                >*/}
+            {/*                    {(datum) => (*/}
+            {/*                        <Text weight="bold">{ datum.name }</Text>*/}
+            {/*                    )}*/}
+            {/*                </List>*/}
+            {/*            </CardBody>*/}
+            {/*            <CardFooter>*/}
+            {/*            </CardFooter>*/}
+            {/*        </Card>*/}
+            {/*        /!*{ isLoadedFromCloud &&*!/*/}
+            {/*        /!*    <Card pad="medium" background="light-1" flex={"grow"}>*!/*/}
+            {/*        /!*        <CardHeader margin={{ "bottom": "xsmall" }}>*!/*/}
+            {/*        /!*            <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>*!/*/}
+            {/*        /!*                클라우드 등록 모델*!/*/}
+            {/*        /!*            </Heading>*!/*/}
+            {/*        /!*        </CardHeader>*!/*/}
+            {/*        /!*        <CardBody fill="vertical">*!/*/}
+            {/*        /!*            <List data={cloudModels}*!/*/}
+            {/*        /!*                  pad={{ left: "small", right: "none" }}*!/*/}
+            {/*        /!*                  action={(item, index) => (*!/*/}
+            {/*        /!*                      <Menu key={index} icon={<More />}*!/*/}
+            {/*        /!*                            items={[*!/*/}
+            {/*        /!*                                { label: "수정", onClick: () => onModify(item.id) },*!/*/}
+            {/*        /!*                                { label: "삭제", onClick: () => onDelete(item.id) }*!/*/}
+            {/*        /!*                            ]}*!/*/}
+            {/*        /!*                      />*!/*/}
+            {/*        /!*                  )}*!/*/}
+            {/*        /!*            >*!/*/}
+            {/*        /!*                {(datum) => (*!/*/}
+            {/*        /!*                    <Text weight="bold">{ datum.name }</Text>*!/*/}
+            {/*        /!*                )}*!/*/}
+            {/*        /!*            </List>*!/*/}
+            {/*        /!*        </CardBody>*!/*/}
+            {/*        /!*        <CardFooter>*!/*/}
+            {/*        /!*        </CardFooter>*!/*/}
+            {/*        /!*    </Card>*!/*/}
+            {/*        /!*}*!/*/}
+            {/*    </CardBody>*/}
+            {/*    <CardFooter>*/}
+            {/*        <Box as="footer" gap="small" direction="row" align="center" justify="end"*/}
+            {/*             pad={{ top: "medium", bottom: "small" }}*/}
+            {/*        >*/}
+            {/*            <Button*/}
+            {/*                label={*/}
+            {/*                    <Text color="white">*/}
+            {/*                        <strong>클라우드 모델 동기화</strong>*/}
+            {/*                    </Text>*/}
+            {/*                }*/}
+            {/*                // onClick={onLoadFromCloud}*/}
+            {/*                primary*/}
+            {/*                disabled={true} // TODO : To be deleted*/}
+            {/*            />*/}
+            {/*            <Button*/}
+            {/*                label={*/}
+            {/*                    <Text color="white">*/}
+            {/*                        <strong>TM 모델 등록</strong>*/}
+            {/*                    </Text>*/}
+            {/*                }*/}
+            {/*                onClick={onCreateWithTMModel}*/}
+            {/*                primary*/}
+            {/*            />*/}
+            {/*        </Box>*/}
+            {/*    </CardFooter>*/}
+            {/*</Card>*/}
+        </Box>
     );
 
 }
