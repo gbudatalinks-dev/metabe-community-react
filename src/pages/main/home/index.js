@@ -1,19 +1,19 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
 
-import {
-    Box, Header, TextInput, Avatar, Text, Tag, Image, Button, Layer, Anchor
-} from "grommet";
-import {
-    TbSearch, TbBell, TbSortDescending, TbHandClick, TbApiApp,
-    TbSettings, TbLogout, TbQuestionMark, TbMailForward,
-    TbChevronDown,
-} from "react-icons/tb";
-import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
+import { Box, Header, Text, Tag, Button } from "grommet";
+import { TbSortDescending, TbCaretDown } from "react-icons/tb";
+import StackGrid, { transitions, easings } from "react-stack-grid";
 
 // import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 // import { db } from "../../../config/firebase";
-import { AppContext } from "../../../context";
+import PageHeader from "../../../components/header";
+import AppCard from "../../../components/card/app";
+import { useWindowSize } from "../../../utils/window";
+import { randomNumberInRange } from "../../../utils/numbers";
+
+const transition = transitions.scaleDown;
+
+
 
 
 function getItems(nextGroupKey, count) {
@@ -21,67 +21,22 @@ function getItems(nextGroupKey, count) {
     const nextKey = nextGroupKey * count;
 
     for (let i = 0; i < count; ++i) {
-        nextItems.push({ groupKey: nextGroupKey, key: nextKey + i });
+        nextItems.push({ groupKey: nextGroupKey, key: nextKey + i, playCount: randomNumberInRange(0, 3000), likeCount: randomNumberInRange(0, 1200) });
     }
     return nextItems;
 }
-
-const Item = ({ num }) => (
-    <Box className="masonry-item" gap={"small"} margin={{ bottom: "small" }}>
-        <Box className="overlay-container">
-            <Image fit="cover" fill className="masonry-item-cover"
-                   src={`https://naver.github.io/egjs-infinitegrid/assets/image/${(num % 33) + 1}.jpg`}
-            />
-            <Box className="text-overlay-top">
-                <Text size={"xsmall"}>이미지</Text>
-            </Box>
-            <Box className="text-overlay-bottom">
-                <Text size={"xsmall"}>{`App Name ${num}`}</Text>
-            </Box>
-        </Box>
-        <Box direction={"row"} justify={"between"} align={"center"}>
-            <Box direction={"row"} align={"center"} gap={"small"}>
-                <Avatar src={"https://s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80"} size={"small"} />
-                <Text size={"xsmall"}>
-                    {`egjs ${num}`}
-                </Text>
-            </Box>
-            <Box direction={"row"} align={"center"} gap={"small"} pad={{ top: "1px" }}>
-                <Box direction={"row"} align={"center"} gap={"xsmall"}>
-                    <TbHandClick size={14} style={{ marginTop: -1 }} />
-                    <Text size={"xsmall"}>2.4K+</Text>
-                </Box>
-                {/*<Box direction={"row"} align={"center"} gap={"xsmall"}>*/}
-                {/*    <TbThumbUp size={15} />*/}
-                {/*    <Box direction={"row"} align={"baseline"}>*/}
-                {/*        <Text size={"xsmall"}>1.1</Text>*/}
-                {/*        <Text size={"8px"} color={"brand"} weight={"bolder"}>K+</Text>*/}
-                {/*    </Box>*/}
-                {/*</Box>*/}
-                {/*<Box direction={"row"} align={"center"} gap={"xsmall"}>*/}
-                {/*    <TbMessage2 size={16} />*/}
-                {/*    <Text size={"xsmall"}>57</Text>*/}
-                {/*</Box>*/}
-            </Box>
-        </Box>
-    </Box>
-);
 
 
 
 export default function Home() {
 
-    const navigate = useNavigate();
-
-    const { globalState } = React.useContext(AppContext);
+    // const navigate = useNavigate();
+    const [ windowWidth ] = useWindowSize();
 
     // const [ newest, setNewest ] = React.useState([]);
     // const [ hottest, setHottest ] = React.useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [ items, setItems ] = React.useState(() => getItems(0, 30));
-    const [ open, setOpen ] = React.useState(false);
-
-    const onOpen = () => setOpen(true);
-    const onClose = () => setOpen(false);
 
     React.useEffect(() => {
         // const listAllUsers = () => {
@@ -116,91 +71,10 @@ export default function Home() {
         // listAllUsers();
     }, []);
 
-    const route = (id) => {
-        navigate(`/main/models/${id}`);
-    };
-
     return (
         <Box fill={true}>
-            { open &&
-                <Layer animation={"slide"} position={"top-right"} margin={{ top: "70px", right: "24px" }} background={"#282828"}
-                       style={{ borderRadius: 16 }}
-                       onClickOutside={onClose} onEsc={onClose}
-                       modal
-                       responsive
-                >
-                    <Box pad={{ vertical: "small" }} gap={"small"}>
-                        <Box gap={"small"} align={"center"} direction={"row"} pad={{ horizontal: "medium" }} margin={{ right: "small" }}>
-                            <Avatar src={globalState.user.photoURL} size={"32px"} style={{ border: "solid 2px #ff5a01"}} />
-                            <Box gap={"xsmall"}>
-                                <Text size={"small"}>
-                                    { globalState.user.name }
-                                </Text>
-                                <Anchor color={"brand"} size={"small"} onClick={() => navigate("/main/profile")}>
-                                    계정 관리
-                                </Anchor>
-                            </Box>
-                        </Box>
-                        <div className={"divider"}/>
-                        <Box gap={"small"} pad={{ horizontal: "medium" }}>
-                            <Box gap={"medium"} align={"center"} direction={"row"} onClick={() => {}}>
-                                <TbApiApp />
-                                <Text size={"small"} margin={{ top: "1px" }}>
-                                    내 앱 관리
-                                </Text>
-                            </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} onClick={() => {}}>
-                                <TbSettings />
-                                <Text size={"small"} margin={{ top: "1px" }}>
-                                    설정
-                                </Text>
-                            </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} onClick={() => {}}>
-                                <TbLogout style={{ marginLeft: 2, marginRight: -2 }} />
-                                <Text size={"small"} margin={{ top: "1px" }}>
-                                    로그아웃
-                                </Text>
-                            </Box>
-                        </Box>
-                        <div className={"divider"}/>
-                        <Box gap={"small"} pad={{ horizontal: "medium" }}>
-                            <Box gap={"medium"} align={"center"} direction={"row"} onClick={() => {}}>
-                                <TbQuestionMark />
-                                <Text size={"small"} margin={{ top: "1px" }}>
-                                    고객 센터
-                                </Text>
-                            </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} onClick={() => {}}>
-                                <TbMailForward />
-                                <Text size={"small"} margin={{ top: "1px" }}>
-                                    의견 보내기
-                                </Text>
-                            </Box>
-                        </Box>
-                    </Box>
-                </Layer>
-            }
-            <Header pad={{ horizontal: "medium", top: "medium", bottom: "small" }} gap={"medium"} direction={"column"}>
-                <Box gap={"xlarge"} direction={"row"} width={"100%"}>
-                    <Box flex={true}>
-                        <TextInput icon={<TbSearch color={"#cccccc"} style={{ marginLeft: 6 }} />} size={"small"}
-                                   placeholder={"쉼표로 구분하여 검색 가능합니다."}
-                        />
-                    </Box>
-                    <Box gap={"small"} align={"center"} direction={"row"}>
-                        <Text size={"small"} margin={{ top: "2px" }}>
-                            { globalState.user.name }
-                        </Text>
-                        <Avatar src={globalState.user.photoURL} size={"32px"} style={{ border: "solid 2px #ff5a01"}}
-                                onClick={onOpen}
-                        />
-                        <Button icon={<TbBell size={18} />}
-                                className="full-rounded disabled-focus"
-                                style={{ padding: 10, marginLeft: -4, marginTop: 1 }}
-                                hoverIndicator
-                        />
-                    </Box>
-                </Box>
+            <PageHeader />
+            <Header pad={{ horizontal: "medium", vertical: "small" }}>
                 <Box gap={"xlarge"} direction={"row"} width={"100%"}>
                     <Box flex={true} align={"start"} direction={"row"} gap={"small"}>
                         <Tag value={"전체"} size={"small"}
@@ -230,75 +104,37 @@ export default function Home() {
                     </Box>
                 </Box>
             </Header>
-            <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: "medium" }} overflow={"scroll"}>
-                <ResponsiveMasonry
-                    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4, 1600: 5 }}
+            <Box width={"100%"} pad={"medium"} margin={{ bottom: "medium" }} overflow={"scroll"}>
+                {/*<ResponsiveMasonry*/}
+                {/*    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4, 1600: 5 }}*/}
+                {/*>*/}
+                {/*    <Masonry gutter={"20px"}>*/}
+                {/*        { items.map((item) => <AppCard key={item.key} item={item} />) }*/}
+                {/*    </Masonry>*/}
+                {/*</ResponsiveMasonry>*/}
+                <StackGrid
+                    monitorImagesLoaded
+                    columnWidth={(windowWidth - 20 * 6 - 100) / 5}
+                    duration={600}
+                    gutterWidth={20}
+                    gutterHeight={20}
+                    easing={easings.cubicOut}
+                    appearDelay={60}
+                    appear={transition.appear}
+                    appeared={transition.appeared}
+                    enter={transition.enter}
+                    entered={transition.entered}
+                    leaved={transition.leaved}
                 >
-                    <Masonry gutter={"20px"}>
-                        { items.map((item) => <Item data-grid-groupkey={item.groupKey} key={item.key} num={item.key} />) }
-                    </Masonry>
-                </ResponsiveMasonry>
-                <Box align={"center"} pad={"medium"} margin={{ bottom: "medium" }}>
-                    <Button primary size={"small"} style={{ width: 120 }}
-                            icon={<TbChevronDown color={"#ffffff"} />}
-                            label={<Text size={"small"} color={"#ffffff"} weight={"bolder"}>더보기</Text>}
-                    />
-                </Box>
+                    { items.map((item) => <AppCard key={item.key} item={item} />) }
+                    <Box align={"center"} pad={"medium"} margin={{ bottom: "medium" }}>
+                        <Button primary size={"small"} style={{ width: 200, height: 60, borderRadius: 30 }}
+                                icon={<TbCaretDown color={"#ffffff"} />}
+                                label={<Text size={"small"} color={"#ffffff"} weight={"bolder"}>더보기</Text>}
+                        />
+                    </Box>
+                </StackGrid>
             </Box>
-            {/*<Card pad={"medium"} background={"light-1"} flex={"grow"}>*/}
-            {/*    <CardHeader margin={{ "bottom": "xsmall" }}>*/}
-            {/*        <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>*/}
-            {/*            새로 올라온 모델*/}
-            {/*        </Heading>*/}
-            {/*    </CardHeader>*/}
-            {/*    <CardBody fill={"vertical"}>*/}
-            {/*        <Grid columns={{ count: 5, size: "auto" }} gap={"small"}>*/}
-            {/*            { newest.map((datum, index) =>*/}
-            {/*                <Card key={index} pad={"small"} onClick={() => route(datum.id)}>*/}
-            {/*                    <CardHeader pad={{ top: "xsmall", bottom: "small" }}>*/}
-            {/*                        <Text margin="none">*/}
-            {/*                            { datum.name }*/}
-            {/*                        </Text>*/}
-            {/*                    </CardHeader>*/}
-            {/*                    <CardBody round={"xsmall"} overflow={"hidden"}>*/}
-            {/*                        <Image src={datum.cover} fit={"contain"} />*/}
-            {/*                    </CardBody>*/}
-            {/*                    <CardFooter pad={{ vertical: "xsmall" }}>*/}
-            {/*                    </CardFooter>*/}
-            {/*                </Card>*/}
-            {/*            )}*/}
-            {/*        </Grid>*/}
-            {/*    </CardBody>*/}
-            {/*    <CardFooter>*/}
-            {/*    </CardFooter>*/}
-            {/*</Card>*/}
-            {/*<Card pad={"medium"} background={"light-1"} flex={"grow"}>*/}
-            {/*    <CardHeader margin={{ "bottom": "xsmall" }}>*/}
-            {/*        <Heading level={"3"} style={{ fontFamily: "Poppins", fontWeight: 800 }}>*/}
-            {/*            인기 모델*/}
-            {/*        </Heading>*/}
-            {/*    </CardHeader>*/}
-            {/*    <CardBody fill="vertical">*/}
-            {/*        <Grid columns={{ count: 5, size: "auto" }} gap={"small"}>*/}
-            {/*            { hottest.map((datum, index) =>*/}
-            {/*                <Card key={index} pad={"small"}>*/}
-            {/*                    <CardHeader pad={{ top: "xsmall", bottom: "small" }}>*/}
-            {/*                        <Text margin="none">*/}
-            {/*                            { datum.name }*/}
-            {/*                        </Text>*/}
-            {/*                    </CardHeader>*/}
-            {/*                    <CardBody round={"xsmall"} overflow={"hidden"}>*/}
-            {/*                        <Image src={datum.cover} fit={"contain"} />*/}
-            {/*                    </CardBody>*/}
-            {/*                    <CardFooter pad={{ vertical: "xsmall" }}>*/}
-            {/*                    </CardFooter>*/}
-            {/*                </Card>*/}
-            {/*            )}*/}
-            {/*        </Grid>*/}
-            {/*    </CardBody>*/}
-            {/*    <CardFooter>*/}
-            {/*    </CardFooter>*/}
-            {/*</Card>*/}
         </Box>
     );
 

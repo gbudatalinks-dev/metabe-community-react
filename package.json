@@ -25,6 +25,7 @@
     "react-responsive-masonry": "^2.1.6",
     "react-router-dom": "^6.3.0",
     "react-scripts": "5.0.1",
+    "react-stack-grid": "^0.7.1",
     "short-uuid": "^4.2.0",
     "styled-components": "^5.3.5",
     "web-vitals": "^2.1.4"

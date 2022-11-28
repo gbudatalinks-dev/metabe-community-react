@@ -22,29 +22,32 @@ export default function SignIn(props) {
         const user = auth.currentUser;
 
         if (user) {
-            const token = sessionStorage.getItem("GoogleAccessToken");
-            console.log(user);
-            console.log("access token : " + token);
+            // eslint-disable-next-line no-unused-vars
+            const token = sessionStorage.getItem("googleAccessToken");
+            // console.log(user);
+            // console.log("access token : " + token);
             const userData = await setUserData(user);
             signInAction(userData);
             navigate("/main");
-        } else {
+        }
+        else {
             signInWithPopup(auth, provider).then(async (result) => {
                 // This gives you a Google Access Token. You can use it to access Google APIs.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
 
                 // The signed-in user info.
-                console.log(result.user);
-                console.log("access token : " + token)
-                sessionStorage.setItem("GoogleAccessToken", token);
+                // console.log(result.user);
+                // console.log("access token : " + token)
+                sessionStorage.setItem("googleAccessToken", token);
 
                 if (result.user !== null && result.user !== undefined) {
                     const userData = await setUserData(result.user);
-                    console.log(userData);
+                    // console.log(userData);
                     signInAction(userData);
                     navigate("/main");
-                } else {
+                }
+                else {
                     console.error("User is undefined");
                 }
             });
@@ -65,8 +68,12 @@ export default function SignIn(props) {
                 email: user.email,
                 name: user.displayName,
                 photoURL: user.photoURL,
-                subscriptions: [],
+                rank: 0,
+                appCount: 0,
                 subscriberCount: 0,
+                likeCount: 0,
+                playCount: 0,
+                subscriptions: [],
                 bookmarks: [],
                 blocks: [],
                 blockUsers: [],

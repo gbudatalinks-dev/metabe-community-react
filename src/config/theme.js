@@ -142,6 +142,9 @@ export const DEFAULT_THEME = {
     },
     tab: {
         margin: "xsmall",
+        pad: {
+            horizontal: "large",
+        },
         active: {
             color: "brand",
         },
