@@ -5,6 +5,8 @@ import { Box } from "grommet";
 
 import SideBar from "../../components/sidebar";
 import Home from "./home";
+import Profile from "./profile";
+
 import Search from "./search";
 import Bookmarks from "./bookmarks";
 import Manage from "./manage";
@@ -24,6 +26,7 @@ export default function Main(props) {
                 <Route path="/bookmarks" element={<Bookmarks />} />
                 <Route path="/manage" element={<Manage />} />
                 <Route path="/models/:modelId" element={<Models />} />
+                <Route path="/profile" element={<Profile />} />
                 <Route path="/search" element={<Search />} />
                 <Route path="/settings" element={<Settings />} />
                 <Route path="/" element={<Home />} />

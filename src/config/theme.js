@@ -2,12 +2,12 @@ import { FormTrash } from "grommet-icons";
 
 export const DEFAULT_THEME = {
     global: {
-        "colors": {
-            "brand": {
+        colors: {
+            brand: {
                 "dark": "#ff5a01",
                 "light": "#85cf81"
             },
-            "background": {
+            background: {
                 "dark": "#0a0a0a",
                 "light": "#FFFFFF"
             },
@@ -23,7 +23,7 @@ export const DEFAULT_THEME = {
                 "dark": "#FFFFFF11",
                 "light": "#0a0a0a11"
             },
-            "text": {
+            text: {
                 "dark": "#EEEEEE",
                 "light": "#333333"
             },
@@ -39,11 +39,11 @@ export const DEFAULT_THEME = {
                 "dark": "#999999",
                 "light": "#666666"
             },
-            "border": {
+            border: {
                 "dark": "#1c1d24",
                 "light": "#CCCCCC"
             },
-            "control": "brand",
+            control: "brand",
             "active-background": "background-contrast",
             "active-text": "text-strong",
             "selected-background": "brand",
@@ -55,131 +55,142 @@ export const DEFAULT_THEME = {
             "status-disabled": "#CCCCCC",
             "graph-0": "brand",
             "graph-1": "status-warning",
-            "focus": "brand"
+            focus: "brand"
         },
-        "font": {
-            "family": "Poppins"
+        font: {
+            family: "Poppins"
         },
-        "active": {
-            "background": "active-background",
-            "color": "active-text"
+        active: {
+            background: "active-background",
+            color: "active-text"
         },
-        "hover": {
-            "background": "active-background",
-            "color": "active-text"
+        hover: {
+            background: "active-background",
+            color: "active-text"
         },
-        "selected": {
-            "background": "selected-background",
-            "color": "selected-text"
+        selected: {
+            background: "selected-background",
+            color: "selected-text"
         },
-        "control": {
-            "border": {
-                "radius": "24px",
+        control: {
+            border: {
+                radius: "24px",
             },
         },
     },
-    "chart": {},
-    "diagram": {
-        "line": {}
+    chart: {},
+    diagram: {
+        line: {}
     },
-    "meter": {},
-    "layer": {
-        "background": {
-            "dark": "#0a0a0a",
-            "light": "#FFFFFF"
+    meter: {},
+    layer: {
+        background: {
+            dark: "#0a0a0a",
+            light: "#FFFFFF"
         }
     },
-    "formField": {
-        "border": {
-            "color": "active-background",
-            "error": {
-                "color": {
-                    "dark": "white",
-                    "light": "status-critical"
+    formField: {
+        border: {
+            color: "active-background",
+            error: {
+                color: {
+                    dark: "white",
+                    light: "status-critical"
                 }
             },
-            "position": "inner",
-            "side": "bottom"
+            position: "inner",
+            side: "bottom"
         },
-        "content": {
-            "pad": "small"
+        content: {
+            pad: "small"
         },
-        "disabled": {
-            "background": {
-                "color": "status-disabled",
-                "opacity": "medium"
+        disabled: {
+            background: {
+                color: "status-disabled",
+                opacity: "medium"
             }
         },
-        "error": {
-            "color": "status-critical",
-            "margin": {
-                "vertical": "xsmall",
-                "horizontal": "small"
+        error: {
+            color: "status-critical",
+            margin: {
+                vertical: "xsmall",
+                horizontal: "small"
             }
         },
-        "help": {
-            "color": "dark-3",
-            "margin": {
-                "start": "small"
+        help: {
+            color: "dark-3",
+            margin: {
+                start: "small"
             }
         },
-        "info": {
-            "color": "text-xweak",
-            "margin": {
-                "vertical": "xsmall",
-                "horizontal": "small"
+        info: {
+            color: "text-xweak",
+            margin: {
+                vertical: "xsmall",
+                horizontal: "small"
             }
         },
-        "label": {
-            "margin": {
-                "vertical": "xsmall",
-                "horizontal": "none"
+        label: {
+            margin: {
+                vertical: "xsmall",
+                horizontal: "none"
             },
         },
-        "margin": {
-            "bottom": "small"
+        margin: {
+            bottom: "small"
         }
     },
-    "tab": {
-        "margin": "xsmall",
-        "border": {
-            "side": "bottom",
-            "size": "small",
-            "color": {
-                "dark": "accent-1",
-                "light": "brand"
+    tab: {
+        margin: "xsmall",
+        active: {
+            color: "brand",
+        },
+        color: {
+            "dark": "white",
+            "light": "dark-1"
+        },
+        hover: {
+            color: "brand"
+
+        },
+        border: {
+            side: "bottom",
+            size: "small",
+            color: {
+                dark: "white",
+                light: "dark-1"
             },
-            "active": {
-                "color": {
-                    "dark": "white",
-                    "light": "black"
+            active: {
+                color: {
+                    dark: "brand",
+                    light: "brand"
                 }
             },
-            "disabled": {},
-            "hover": {
-                "color": {
-                    "dark": "white",
-                    "light": "black"
+            disabled: {},
+            hover: {
+                color: {
+                    dark: "white",
+                    light: "dark-1"
                 }
             }
         }
     },
-    "fileInput": {
-        "pad": {
-            "horizontal": "medium",
-            "vertical": "xsmall"
+    fileInput: {
+        pad: {
+            horizontal: "medium",
+            vertical: "xsmall"
         },
-        "round": "large",
-        "border": {
-            "size": "xsmall",
+        round: "large",
+        border: {
+            size: "xsmall",
         },
-        "icons": {
-            "remove": FormTrash,
+        icons: {
+            remove: FormTrash,
         }
     },
-    "select": {
-        "control": {
-            "extend": "padding: 0 12px;",
+    select: {
+        control: {
+            extend: "padding: 0 12px;",
         },
         // "container": {
         //     "extend": {
@@ -188,11 +199,11 @@ export const DEFAULT_THEME = {
         //         },
         //     },
         // },
-        "options": {
-            "text": {
-                "size": "16px",
-                "margin": {
-                    "horizontal" : "12px",
+        options: {
+            text: {
+                size: "16px",
+                margin: {
+                    horizontal : "12px",
                 }
             }
         },
@@ -209,5 +220,5 @@ export const DEFAULT_THEME = {
                 color: #cccccc;
             `,
         },
-    }
+    },
 };

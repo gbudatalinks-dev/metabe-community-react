@@ -53,6 +53,7 @@ export default function SideBar() {
                     <Button icon={<TbCircleSquare size={24} color={"#ffffff"} />}
                             primary
                             className="full-rounded disabled-focus"
+                            onClick={() => route("/main")}
                     />
                 </Box>
             }
@@ -63,7 +64,7 @@ export default function SideBar() {
                 //         <Text margin={{ right: "small" }}>도움말</Text>
                 //     </Box>
                 // </Button>
-                <Box pad={"small"} margin={{ bottom: "medium" }} gap={"small"} border={"top"} align={"center"}>
+                <Box pad={{ horizontal: "small", vertical: "medium" }} gap={"small"} border={"top"} align={"center"}>
                     <Button icon={<TbSettings size={24} />}
                             className="rounded disabled-focus"
                             hoverIndicator
@@ -96,6 +97,10 @@ export default function SideBar() {
                         className="rounded disabled-focus"
                         hoverIndicator
                 />
+                {/*<Button icon={<TbPlugConnected size={24} />}*/}
+                {/*        className="rounded disabled-focus"*/}
+                {/*        hoverIndicator*/}
+                {/*/>*/}
                 {/*<Button margin={{ "horizontal": "small" }} className="rounded disabled-focus" hoverIndicator*/}
                 {/*        onClick={() => route("/main")}*/}
                 {/*>*/}

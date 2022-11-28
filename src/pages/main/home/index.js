@@ -6,12 +6,13 @@ import {
 } from "grommet";
 import {
     TbSearch, TbBell, TbSortDescending, TbHandClick, TbApiApp,
-    TbSettings, TbLogout, TbQuestionMark, TbMailForward
+    TbSettings, TbLogout, TbQuestionMark, TbMailForward,
+    TbChevronDown,
 } from "react-icons/tb";
-import { MasonryInfiniteGrid } from "@egjs/react-infinitegrid";
+import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
-import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
-import { db } from "../../../config/firebase";
+// import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
+// import { db } from "../../../config/firebase";
 import { AppContext } from "../../../context";
 
 
@@ -26,7 +27,7 @@ function getItems(nextGroupKey, count) {
 }
 
 const Item = ({ num }) => (
-    <Box className="masonry-item" gap={"small"} style={{ width: "300px"}} >
+    <Box className="masonry-item" gap={"small"} margin={{ bottom: "small" }}>
         <Box className="overlay-container">
             <Image fit="cover" fill className="masonry-item-cover"
                    src={`https://naver.github.io/egjs-infinitegrid/assets/image/${(num % 33) + 1}.jpg`}
@@ -74,8 +75,9 @@ export default function Home() {
 
     const { globalState } = React.useContext(AppContext);
 
-    const [ newest, setNewest ] = React.useState([]);
-    const [ hottest, setHottest ] = React.useState([]);
+    // const [ newest, setNewest ] = React.useState([]);
+    // const [ hottest, setHottest ] = React.useState([]);
+    const [ items, setItems ] = React.useState(() => getItems(0, 30));
     const [ open, setOpen ] = React.useState(false);
 
     const onOpen = () => setOpen(true);
@@ -118,14 +120,6 @@ export default function Home() {
         navigate(`/main/models/${id}`);
     };
 
-
-
-
-    const [ items, setItems ] = React.useState(() => getItems(0, 10));
-
-
-
-
     return (
         <Box fill={true}>
             { open &&
@@ -142,7 +136,7 @@ export default function Home() {
                                 <Text size={"small"}>
                                     { globalState.user.name }
                                 </Text>
-                                <Anchor color={"brand"} href={"#"} size={"small"}>
+                                <Anchor color={"brand"} size={"small"} onClick={() => navigate("/main/profile")}>
                                     계정 관리
                                 </Anchor>
                             </Box>
@@ -186,7 +180,7 @@ export default function Home() {
                     </Box>
                 </Layer>
             }
-            <Header pad={"medium"} gap={"medium"} direction={"column"}>
+            <Header pad={{ horizontal: "medium", top: "medium", bottom: "small" }} gap={"medium"} direction={"column"}>
                 <Box gap={"xlarge"} direction={"row"} width={"100%"}>
                     <Box flex={true}>
                         <TextInput icon={<TbSearch color={"#cccccc"} style={{ marginLeft: 6 }} />} size={"small"}
@@ -237,22 +231,19 @@ export default function Home() {
                 </Box>
             </Header>
             <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: "medium" }} overflow={"scroll"}>
-                <MasonryInfiniteGrid
-                    className="container"
-                    gap={24}
-                    onRequestAppend={(e) => {
-                        const nextGroupKey = e.groupKey + 1;
-                        setItems([
-                            ...items,
-                            ...getItems(nextGroupKey, 10),
-                        ]);
-                    }}
-                    onRenderComplete={(e) => {}}
+                <ResponsiveMasonry
+                    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4, 1600: 5 }}
                 >
-                    {
-                        items.map((item) => <Item data-grid-groupkey={item.groupKey} key={item.key} num={item.key} />)
-                    }
-                </MasonryInfiniteGrid>
+                    <Masonry gutter={"20px"}>
+                        { items.map((item) => <Item data-grid-groupkey={item.groupKey} key={item.key} num={item.key} />) }
+                    </Masonry>
+                </ResponsiveMasonry>
+                <Box align={"center"} pad={"medium"} margin={{ bottom: "medium" }}>
+                    <Button primary size={"small"} style={{ width: 120 }}
+                            icon={<TbChevronDown color={"#ffffff"} />}
+                            label={<Text size={"small"} color={"#ffffff"} weight={"bolder"}>더보기</Text>}
+                    />
+                </Box>
             </Box>
             {/*<Card pad={"medium"} background={"light-1"} flex={"grow"}>*/}
             {/*    <CardHeader margin={{ "bottom": "xsmall" }}>*/}
