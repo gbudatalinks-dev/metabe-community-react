@@ -48,6 +48,7 @@ export default function SideBar() {
                     <Button icon={<TbBook size={24} />}
                             className="rounded disabled-focus"
                             hoverIndicator
+                            onClick={() => route("/main/guide")}
                     />
                     <Button icon={<TbLogout size={24} />}
                             className="rounded disabled-focus"
@@ -62,15 +63,17 @@ export default function SideBar() {
                 <Button icon={<TbListSearch size={24} />}
                         className="rounded disabled-focus"
                         hoverIndicator
-                        onClick={() => route("/main")}
+                        onClick={() => route("/main/home")}
                 />
                 <Button icon={<TbLayoutDashboard size={24} />}
                         className="rounded disabled-focus"
                         hoverIndicator
+                        onClick={() => route("/main/collections")}
                 />
                 <Button icon={<TbBrandMessenger size={24} />}
                         className="rounded disabled-focus"
                         hoverIndicator
+                        onClick={() => route("/main/chats")}
                 />
             </Nav>
         </Sidebar>

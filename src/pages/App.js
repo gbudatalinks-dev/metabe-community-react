@@ -82,7 +82,8 @@ export default function App() {
                                     <Main />
                                 </ProtectedRoute>
                             } />
-                            <Route path="*" element={<ErrorPage />} />
+                            <Route path="/error" element={<ErrorPage />} />
+                            <Route path="*" element={<Navigate to="/error" replace />} />
                         </Routes>
                     </Box>
                 </Grommet>

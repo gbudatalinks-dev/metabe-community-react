@@ -3,16 +3,16 @@ import { FormTrash } from "grommet-icons";
 export const DEFAULT_THEME = {
     global: {
         colors: {
-            brand: {
+            "brand": {
                 "dark": "#ff5a01",
                 "light": "#85cf81"
             },
-            background: {
+            "background": {
                 "dark": "#0a0a0a",
                 "light": "#FFFFFF"
             },
             "background-back": {
-                "dark": "#0a0a0a",
+                "dark": "#101116",
                 "light": "#EEEEEE"
             },
             "background-front": {
@@ -23,7 +23,7 @@ export const DEFAULT_THEME = {
                 "dark": "#FFFFFF11",
                 "light": "#0a0a0a11"
             },
-            text: {
+            "text": {
                 "dark": "#EEEEEE",
                 "light": "#333333"
             },
@@ -39,11 +39,11 @@ export const DEFAULT_THEME = {
                 "dark": "#999999",
                 "light": "#666666"
             },
-            border: {
+            "border": {
                 "dark": "#1c1d24",
                 "light": "#CCCCCC"
             },
-            control: "brand",
+            "control": "brand",
             "active-background": "background-contrast",
             "active-text": "text-strong",
             "selected-background": "brand",
@@ -55,7 +55,7 @@ export const DEFAULT_THEME = {
             "status-disabled": "#CCCCCC",
             "graph-0": "brand",
             "graph-1": "status-warning",
-            focus: "brand"
+            "focus": "brand"
         },
         font: {
             family: "Poppins"

@@ -6,12 +6,14 @@ import {
     TbApps, TbBell, TbLogout, TbMailForward, TbQuestionMark, TbSearch, TbSettings, TbMoodEmpty
 } from "react-icons/tb";
 
+import { signOut } from "firebase/auth";
 import { AppContext } from "../../context";
+import { auth } from "../../config/firebase";
 
 export default function PageHeader() {
 
     const navigate = useNavigate();
-    const { globalState } = React.useContext(AppContext);
+    const { globalState, signOutAction } = React.useContext(AppContext);
 
     const [ contextMenuOpen, setContextMenuOpen ] = React.useState(false);
     const [ notificationListOpen, setNotificationListOpen ] = React.useState(false);
@@ -21,6 +23,18 @@ export default function PageHeader() {
 
     const onNotificationListOpen = () => setNotificationListOpen(true);
     const onNotificationListClose = () => setNotificationListOpen(false);
+
+    const signOutWithGoogle = () => {
+        signOut(auth).then(() => {
+            // Sign-out successful.
+            sessionStorage.clear();
+            signOutAction();
+            navigate("/");
+        }).catch((error) => {
+            // An error happened.
+            console.log("[SignOut Error]", error);
+        });
+    };
 
     return (
         <>
@@ -62,7 +76,7 @@ export default function PageHeader() {
                                 </Text>
                             </Box>
                             <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
-                                 onClick={() => {}}
+                                 onClick={() => signOutWithGoogle()}
                             >
                                 <TbLogout style={{ marginLeft: 2, marginRight: -2 }} />
                                 <Text size={"small"} margin={{ top: "1px" }}>

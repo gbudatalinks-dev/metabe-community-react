@@ -95,7 +95,7 @@ export default function SignIn(props) {
 
     return (
         <Box justify="center" align="center" pad="large" fill>
-            <Box pad="large" gap="medium" background={"#1c1d24"} round={true}>
+            <Box pad="large" gap="medium" background={"background-front"} round={true}>
                 <Heading level={"3"} color={"#fff"} style={{ fontFamily: "Noto Sans KR", fontWeight: 900 }}>
                     로그인
                 </Heading>
