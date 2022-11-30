@@ -1,12 +1,14 @@
 import React from "react";
 
+import { throttle } from "lodash";
 import { Box, Header, Text, Tag, Button } from "grommet";
-import { TbSortDescending, TbCaretDown } from "react-icons/tb";
+import { TbSortDescending } from "react-icons/tb";
 import StackGrid, { transitions, easings } from "react-stack-grid";
 
 import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
 import { useWindowSize } from "../../../utils/window";
+import { calGridCol } from "../../../utils/grid";
 import { randomNumberInRange } from "../../../utils/numbers";
 
 const transition = transitions.scaleDown;
@@ -28,10 +30,26 @@ function getItems(nextGroupKey, count) {
 
 export default function Collections() {
 
-    const [ windowWidth ] = useWindowSize();
+    // const navigate = useNavigate();
+    const [ windowWidth, windowHeight ] = useWindowSize();
+    const landscape = windowWidth > windowHeight;
 
     // eslint-disable-next-line no-unused-vars
-    const [ items, setItems ] = React.useState(() => getItems(0, 30));
+    const [ items, setItems ] = React.useState(() => getItems(1, 30));
+    const [ loadMore, setLoadMore ] = React.useState(false);
+
+    React.useEffect(() => {
+    }, []);
+
+    const onScroll = (e) => throttledScroll(e.target);
+    const throttledScroll = React.useMemo(
+        () =>
+            throttle((target) => {
+                const reachedToBottom = target.scrollHeight - target.scrollTop - 10 <= target.clientHeight;
+                if (reachedToBottom !== loadMore) setLoadMore(reachedToBottom);
+            }, 300),
+        [loadMore]
+    );
 
     return (
         <Box fill={true}>
@@ -58,10 +76,12 @@ export default function Collections() {
                     </Box>
                 </Box>
             </Header>
-            <Box width={"100%"} pad={"medium"} margin={{ bottom: "medium" }} overflow={"scroll"}>
+            <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: landscape? "24px" : "30px" }} overflow={"scroll"}
+                 onScroll={onScroll}
+            >
                 <StackGrid
                     monitorImagesLoaded
-                    columnWidth={(windowWidth - 20 * 6 - 100) / 5}
+                    columnWidth={calGridCol(windowWidth, landscape, 20)}
                     duration={600}
                     gutterWidth={20}
                     gutterHeight={20}
@@ -74,12 +94,6 @@ export default function Collections() {
                     leaved={transition.leaved}
                 >
                     { items.map((item) => <AppCard key={item.key} item={item} />) }
-                    <Box align={"center"} pad={"medium"} margin={{ bottom: "medium" }}>
-                        <Button primary size={"small"} style={{ width: 200, height: 60, borderRadius: 30 }}
-                                icon={<TbCaretDown color={"#ffffff"} />}
-                                label={<Text size={"small"} color={"#ffffff"} weight={"bolder"}>더보기</Text>}
-                        />
-                    </Box>
                 </StackGrid>
             </Box>
         </Box>

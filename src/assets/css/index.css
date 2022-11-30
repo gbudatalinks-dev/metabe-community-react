@@ -35,7 +35,24 @@ html {
     padding: 0 8px;
 }
 
-.masonry-item {}
+.my-node-enter {
+    opacity: 0;
+}
+.my-node-enter-active {
+    opacity: 1;
+    transition: opacity 200ms;
+}
+.my-node-exit {
+    opacity: 1;
+}
+.my-node-exit-active {
+    opacity: 0;
+    transition: opacity 200ms;
+}
+
+.masonry-item {
+    transition: all 0.3s ease !important;
+}
 
 .masonry-item-cover {
     border-radius: 18px;

@@ -1,8 +1,10 @@
 import React from "react";
 
+import { throttle } from "lodash";
 import { Box, Header, Text, Tag, Button } from "grommet";
-import { TbSortDescending, TbCaretDown } from "react-icons/tb";
+import { TbSortDescending } from "react-icons/tb";
 import StackGrid, { transitions, easings } from "react-stack-grid";
+// import { MasonryInfiniteGrid } from "@egjs/react-infinitegrid";
 // import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 // import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
@@ -10,6 +12,7 @@ import StackGrid, { transitions, easings } from "react-stack-grid";
 import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
 import { useWindowSize } from "../../../utils/window";
+import { calGridCol } from "../../../utils/grid";
 import { randomNumberInRange } from "../../../utils/numbers";
 
 const transition = transitions.scaleDown;
@@ -32,12 +35,14 @@ function getItems(nextGroupKey, count) {
 export default function Home() {
 
     // const navigate = useNavigate();
-    const [ windowWidth ] = useWindowSize();
+    const [ windowWidth, windowHeight ] = useWindowSize();
+    const landscape = windowWidth > windowHeight;
 
     // const [ newest, setNewest ] = React.useState([]);
     // const [ hottest, setHottest ] = React.useState([]);
     // eslint-disable-next-line no-unused-vars
     const [ items, setItems ] = React.useState(() => getItems(0, 30));
+    const [ loadMore, setLoadMore ] = React.useState(false);
 
     React.useEffect(() => {
         // const listAllUsers = () => {
@@ -72,6 +77,17 @@ export default function Home() {
         // listAllUsers();
     }, []);
 
+    const onScroll = (e) => throttledScroll(e.target);
+    const throttledScroll = React.useMemo(
+        () =>
+            throttle((target) => {
+                // console.log(`scrollHeight: ${target.scrollHeight}, scrollTop: ${target.scrollTop}, clientHeight: ${target.clientHeight}`)
+                const reachedToBottom = target.scrollHeight - target.scrollTop - 10 <= target.clientHeight;
+                if (reachedToBottom !== loadMore) setLoadMore(reachedToBottom);
+            }, 300),
+        [loadMore]
+    );
+
     return (
         <Box fill={true}>
             <PageHeader />
@@ -105,7 +121,9 @@ export default function Home() {
                     </Box>
                 </Box>
             </Header>
-            <Box width={"100%"} pad={"medium"} margin={{ bottom: "medium" }} overflow={"scroll"}>
+            <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: landscape? "18px" : "30px" }} overflow={"scroll"}
+                 onScroll={onScroll}
+            >
                 {/*<ResponsiveMasonry*/}
                 {/*    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4, 1600: 5 }}*/}
                 {/*>*/}
@@ -113,9 +131,16 @@ export default function Home() {
                 {/*        { items.map((item) => <AppCard key={item.key} item={item} />) }*/}
                 {/*    </Masonry>*/}
                 {/*</ResponsiveMasonry>*/}
+                {/*<MasonryInfiniteGrid*/}
+                {/*    className="container"*/}
+                {/*    gap={24}*/}
+                {/*    onRenderComplete={(e) => {}}*/}
+                {/*>*/}
+                {/*    { items.map((item) => <AppCard key={item.key} item={item} />) }*/}
+                {/*</MasonryInfiniteGrid>*/}
                 <StackGrid
                     monitorImagesLoaded
-                    columnWidth={(windowWidth - 20 * 6 - 100) / 5}
+                    columnWidth={calGridCol(windowWidth, landscape, 20)}
                     duration={600}
                     gutterWidth={20}
                     gutterHeight={20}
@@ -128,12 +153,6 @@ export default function Home() {
                     leaved={transition.leaved}
                 >
                     { items.map((item) => <AppCard key={item.key} item={item} />) }
-                    <Box align={"center"} pad={"medium"} margin={{ bottom: "medium" }}>
-                        <Button primary size={"small"} style={{ width: 200, height: 60, borderRadius: 30 }}
-                                icon={<TbCaretDown color={"#ffffff"} />}
-                                label={<Text size={"small"} color={"#ffffff"} weight={"bolder"}>더보기</Text>}
-                        />
-                    </Box>
                 </StackGrid>
             </Box>
         </Box>
