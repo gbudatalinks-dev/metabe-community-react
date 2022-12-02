@@ -1,4 +1,5 @@
 import { FormTrash } from "grommet-icons";
+import { TbCaretDown, TbCaretUp } from "react-icons/tb";
 
 export const DEFAULT_THEME = {
     global: {
@@ -179,6 +180,7 @@ export const DEFAULT_THEME = {
         }
     },
     fileInput: {
+        background: "background-front",
         pad: {
             horizontal: "medium",
             vertical: "xsmall"
@@ -189,28 +191,72 @@ export const DEFAULT_THEME = {
         },
         icons: {
             remove: FormTrash,
-        }
+        },
+        label: {
+            text: {
+                size: "small",
+            },
+        },
+        message: {
+            size: "small",
+        },
+        button: {
+            color: "brand",
+            extend: () => `
+                font-size: 14px;
+            `,
+        },
+        extend: () => `
+            height: 100%;
+        `,
     },
     select: {
         control: {
-            extend: "padding: 0 12px;",
+            extend: "padding: 0 6px; background-color: #1c1d24; border-radius: 24px;",
+            open: {
+                background: "background-front",
+                border: "1px solid #ff5a01",
+            },
         },
-        // "container": {
-        //     "extend": {
-        //         "text": {
-        //             "size": "small",
-        //         },
-        //     },
-        // },
-        options: {
+        container: {
             text: {
-                size: "16px",
-                margin: {
-                    horizontal : "12px",
-                }
+                size: "small",
+            },
+        },
+        options: {
+            container: {
+                background: "background-front",
+            },
+            text: {
+                size: "small",
             }
         },
+        icons: {
+            down: <TbCaretDown />,
+            up: <TbCaretUp />,
+        },
     },
+    // select: {
+    //     background: "background-front",
+    //     control: {
+    //         // extend: "padding: 0 12px;",
+    //     },
+    //     // "container": {
+    //     //     "extend": {
+    //     //         "text": {
+    //     //             "size": "small",
+    //     //         },
+    //     //     },
+    //     // },
+    //     options: {
+    //         text: {
+    //             size: "14px",
+    //             margin: {
+    //                 horizontal : "12px",
+    //             }
+    //         }
+    //     },
+    // },
     textInput: {
         container: {
             extend: () => `

@@ -49,12 +49,10 @@ export default function SideBar() {
             footer={
                 <Box pad={{ horizontal: "small", vertical: "medium" }} gap={"small"} border={"top"} align={"center"}>
                     <Button icon={<TbBook size={24} />}
-                            hoverIndicator
                             onClick={() => route("/main/guide")}
                     />
                     <Button icon={<TbLogout size={24} />}
                             margin={{ left: "5px" }}
-                            hoverIndicator
                             onClick={() => signOutWithGoogle()}
                     />
                 </Box>

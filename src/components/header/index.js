@@ -9,6 +9,7 @@ import {
 import { signOut } from "firebase/auth";
 import { AppContext } from "../../context";
 import { auth } from "../../config/firebase";
+import UploadApp from "../upload";
 
 export default function PageHeader() {
 
@@ -18,11 +19,16 @@ export default function PageHeader() {
     const [ contextMenuOpen, setContextMenuOpen ] = React.useState(false);
     const [ notificationListOpen, setNotificationListOpen ] = React.useState(false);
 
+    const [ createAppOpen, setCreateAppOpen ] = React.useState(false);
+
     const onContextMenuOpen = () => setContextMenuOpen(true);
     const onContextMenuClose = () => setContextMenuOpen(false);
 
     const onNotificationListOpen = () => setNotificationListOpen(true);
     const onNotificationListClose = () => setNotificationListOpen(false);
+
+    const onCreateAppOpen = () => setCreateAppOpen(true);
+    const onCreateAppClose = () => setCreateAppOpen(false);
 
     const signOutWithGoogle = () => {
         signOut(auth).then(() => {
@@ -60,11 +66,14 @@ export default function PageHeader() {
                         <div className={"divider"}/>
                         <Box gap={"small"} pad={{ horizontal: "medium" }}>
                             <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
-                                 onClick={() => {}}
+                                 onClick={() => {
+                                     onContextMenuClose();
+                                     onCreateAppOpen();
+                                 }}
                             >
                                 <TbApps />
                                 <Text size={"small"} margin={{ top: "1px" }}>
-                                    내 앱 관리
+                                    내 앱 등록
                                 </Text>
                             </Box>
                             <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
@@ -121,6 +130,16 @@ export default function PageHeader() {
                             </Text>
                         </Box>
                     </Box>
+                </Layer>
+            }
+            { createAppOpen &&
+                <Layer position={"center"} background={"background-back"}
+                       style={{ borderRadius: 16 }}
+                       onClickOutside={onCreateAppClose} onEsc={onCreateAppClose}
+                       modal
+                       responsive
+                >
+                    <UploadApp onClose={onCreateAppClose} />
                 </Layer>
             }
             <Header pad={{ horizontal: "medium", top: "medium", bottom: "small" }} direction={"column"}>
