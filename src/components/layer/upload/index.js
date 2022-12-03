@@ -8,8 +8,8 @@ import { TbCloudUpload, TbX, TbId } from "react-icons/tb";
 
 import axios from "axios";
 
-import Editor from "../editor";
-import { isEmptyStr } from "../../utils/strings";
+import Editor from "../../editor";
+import { isEmptyStr } from "../../../utils/strings";
 
 const TYPES = ["IMAGE", "POSE"];
 
@@ -152,7 +152,16 @@ export default function UploadApp({ onClose }) {
 
     const onAddTag = (tag) => setTags([...tags, tag]);
 
-    const onChangeLabelName = (index, value) => {};
+    const onChangeLabelName = (index, value) => {
+        const newLabels = labels.map((label, i) => {
+            if (i === index) {
+                return { ...label, name: value };
+            }
+            return label;
+        });
+
+        setLabels(newLabels);
+    };
 
     return (
         <Box width={"xlarge"} pad={"medium" } gap={"medium"}>

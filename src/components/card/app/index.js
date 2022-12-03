@@ -5,26 +5,30 @@ import { TbHandClick, TbThumbUp } from "react-icons/tb";
 
 import { numberToString } from "../../../utils/numbers";
 
-export default function AppCard({ item }) {
+export default function AppCard({ item, onAppClick, onProfileClick }) {
 
     return (
         <Box className="masonry-item" gap={"small"} margin={{ bottom: "small" }}>
-            <Box className="overlay-container">
+            <Box className="overlay-container disabled-focus" onClick={() => {onAppClick(item.uid)}}>
                 <Image fit="cover" fill className="masonry-item-cover"
-                       src={`https://naver.github.io/egjs-infinitegrid/assets/image/${(item.key % 33) + 1}.jpg`}
+                       src={item.cover}
                 />
                 <Box className="text-overlay-top">
-                    <Text size={"xsmall"}>이미지</Text>
+                    <Text size={"xsmall"}>
+                        { item.type }
+                    </Text>
                 </Box>
                 <Box className="text-overlay-bottom">
-                    <Text size={"xsmall"}>{`App Name ${item.key}`}</Text>
+                    <Text size={"xsmall"}>
+                        { item.name }
+                    </Text>
                 </Box>
             </Box>
             <Box direction={"row"} justify={"between"} align={"center"}>
-                <Box direction={"row"} align={"center"} gap={"small"}>
-                    <Avatar src={"https://s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80"} size={"small"} />
+                <Box className="disabled-focus" direction={"row"} align={"center"} gap={"8px"} onClick={() => onProfileClick(item.user.uid)}>
+                    <Avatar src={item.user.avatar} size={"small"} />
                     <Text size={"xsmall"}>
-                        {`egjs ${item.key}`}
+                        { item.user.name }
                     </Text>
                 </Box>
                 <Box direction={"row"} align={"center"} gap={"small"} pad={{ top: "1px" }}>

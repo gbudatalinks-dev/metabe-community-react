@@ -9,7 +9,7 @@ import {
 import { signOut } from "firebase/auth";
 import { AppContext } from "../../context";
 import { auth } from "../../config/firebase";
-import UploadApp from "../upload";
+import UploadApp from "../layer/upload";
 
 export default function PageHeader() {
 
@@ -46,7 +46,7 @@ export default function PageHeader() {
         <>
             { contextMenuOpen &&
                 <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "24px" }} background={"#282828"}
-                       style={{ borderRadius: 16 }}
+                       style={{ borderRadius: 24 }}
                        onClickOutside={onContextMenuClose} onEsc={onContextMenuClose}
                        modal
                        responsive
@@ -117,7 +117,7 @@ export default function PageHeader() {
             }
             { notificationListOpen &&
                 <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "24px" }} background={"#282828"}
-                       style={{ borderRadius: 16 }}
+                       style={{ borderRadius: 24 }}
                        onClickOutside={onNotificationListClose} onEsc={onNotificationListClose}
                        modal
                        responsive
@@ -134,7 +134,7 @@ export default function PageHeader() {
             }
             { createAppOpen &&
                 <Layer position={"center"} background={"background-back"}
-                       style={{ borderRadius: 16 }}
+                       style={{ borderRadius: 24 }}
                        onClickOutside={onCreateAppClose} onEsc={onCreateAppClose}
                        modal
                        responsive

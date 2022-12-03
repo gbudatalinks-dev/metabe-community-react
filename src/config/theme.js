@@ -185,7 +185,7 @@ export const DEFAULT_THEME = {
             horizontal: "medium",
             vertical: "xsmall"
         },
-        round: "large",
+        round: "medium",
         border: {
             size: "xsmall",
         },

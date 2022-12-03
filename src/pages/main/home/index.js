@@ -1,54 +1,34 @@
 import React from "react";
 
 import { throttle } from "lodash";
-import { Box, Header, Text, Tag, Button } from "grommet";
+import { Box, Header, Text, Tag, Button, Layer } from "grommet";
 import { TbSortDescending } from "react-icons/tb";
 import StackGrid, { transitions, easings } from "react-stack-grid";
-// import { MasonryInfiniteGrid } from "@egjs/react-infinitegrid";
-// import Masonry, { ResponsiveMasonry } from "react-responsive-masonry";
 
 // import { collection, query, orderBy, limit, getDocs } from "firebase/firestore";
 // import { db } from "../../../config/firebase";
 import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
+import AppLayer from "../../../components/layer/app";
 import { useWindowSize } from "../../../utils/window";
 import { calGridCol } from "../../../utils/grid";
-import { randomNumberInRange } from "../../../utils/numbers";
+
+import { USERS, getItems } from "../../../temp/data";
 
 const transition = transitions.scaleDown;
 
-
-
-
-function getItems(nextGroupKey, count) {
-    const nextItems = [];
-    const nextKey = nextGroupKey * count;
-
-    for (let i = 0; i < count; ++i) {
-        nextItems.push({ groupKey: nextGroupKey, key: nextKey + i, playCount: randomNumberInRange(0, 3000), likeCount: randomNumberInRange(0, 1200) });
-    }
-    return nextItems;
-}
-
-
-
 export default function Home() {
 
-    // const navigate = useNavigate();
     const [ windowWidth, windowHeight ] = useWindowSize();
     const landscape = windowWidth > windowHeight;
 
-    // const [ newest, setNewest ] = React.useState([]);
-    // const [ hottest, setHottest ] = React.useState([]);
-    // eslint-disable-next-line no-unused-vars
-    const [ items, setItems ] = React.useState(() => getItems(0, 30));
+    const [ items, setItems ] = React.useState([]);
     const [ loadMore, setLoadMore ] = React.useState(false);
 
+    const [ selectedApp, setSelectedApp ] = React.useState(undefined);
+    const [ selectedUser, setSelectedUser ] = React.useState(undefined);
+
     React.useEffect(() => {
-        // const listAllUsers = () => {
-        //     // TODO
-        // };
-        //
         // const loadNewest = async () => {
         //     const q = query(collection(db, "models"), orderBy("datetime"), limit(5));
         //     const querySnapshot = await getDocs(q);
@@ -60,21 +40,16 @@ export default function Home() {
         //     });
         //     setNewest(result);
         // };
-        //
-        // const loadHottest = async () => {
-        //     const q = query(collection(db, "models"), orderBy("testCount"), limit(5));
-        //     const querySnapshot = await getDocs(q);
-        //     const result = [];
-        //     let t;
-        //     querySnapshot.forEach((doc) => {
-        //         t = { ...doc.data(), id: doc.id };
-        //         result.push(t);
-        //     });
-        //     setHottest(result);
-        // };
-        //
         // loadNewest().then(() => loadHottest());
-        // listAllUsers();
+
+        // const listAllUsers = () => {};
+
+        const loadInitialItems = () => {
+            setItems(getItems(0, 30, 0));
+        };
+
+        loadInitialItems();
+
     }, []);
 
     const onScroll = (e) => throttledScroll(e.target);
@@ -87,6 +62,18 @@ export default function Home() {
             }, 300),
         [loadMore]
     );
+
+    const onAppClick = (uid) => {
+        setSelectedApp(items[uid]);
+    };
+
+    const closeAppLayer = () => {
+        setSelectedApp(undefined);
+    };
+
+    const onProfileClick = (uid) => {
+        console.log(USERS[uid]);
+    };
 
     return (
         <Box fill={true}>
@@ -121,23 +108,19 @@ export default function Home() {
                     </Box>
                 </Box>
             </Header>
+            { selectedApp !== undefined &&
+                <Layer position={"center"} background={"background-back"}
+                       style={{ borderRadius: 24 }}
+                       onClickOutside={closeAppLayer} onEsc={closeAppLayer}
+                       modal
+                       responsive
+                >
+                    <AppLayer item={selectedApp} onClose={closeAppLayer} />
+                </Layer>
+            }
             <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: landscape? "18px" : "30px" }} overflow={"scroll"}
                  onScroll={onScroll}
             >
-                {/*<ResponsiveMasonry*/}
-                {/*    columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1200: 4, 1600: 5 }}*/}
-                {/*>*/}
-                {/*    <Masonry gutter={"20px"}>*/}
-                {/*        { items.map((item) => <AppCard key={item.key} item={item} />) }*/}
-                {/*    </Masonry>*/}
-                {/*</ResponsiveMasonry>*/}
-                {/*<MasonryInfiniteGrid*/}
-                {/*    className="container"*/}
-                {/*    gap={24}*/}
-                {/*    onRenderComplete={(e) => {}}*/}
-                {/*>*/}
-                {/*    { items.map((item) => <AppCard key={item.key} item={item} />) }*/}
-                {/*</MasonryInfiniteGrid>*/}
                 <StackGrid
                     monitorImagesLoaded
                     columnWidth={calGridCol(windowWidth, landscape, 20)}
@@ -152,7 +135,9 @@ export default function Home() {
                     entered={transition.entered}
                     leaved={transition.leaved}
                 >
-                    { items.map((item) => <AppCard key={item.key} item={item} />) }
+                    { items.map((item) =>
+                        <AppCard key={item.key} item={item} onAppClick={onAppClick} onProfileClick={onProfileClick} />
+                    )}
                 </StackGrid>
             </Box>
         </Box>

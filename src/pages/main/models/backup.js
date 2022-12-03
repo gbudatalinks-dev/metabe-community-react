@@ -16,7 +16,7 @@ ChartJS.register(CategoryScale, LinearScale, BarElement);
 
 const options = {
     indexAxis: "y",
-        elements: {
+    elements: {
         bar: {
             borderWidth: 2,
         }

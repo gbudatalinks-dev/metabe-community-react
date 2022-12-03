@@ -18,7 +18,12 @@ html {
 }
 
 [class^="StyledLayer__StyledOverlay-"] {
-    border-radius: 48px;
+    border-radius: 24px;
+}
+
+textarea {
+    resize: none;
+    overflow: hidden;
 }
 
 .tab-content {
@@ -35,8 +40,8 @@ html {
     box-shadow: none !important;
 }
 
-.rounded {
-    border-radius: 18px;
+.disabled-pointer {
+    pointer-events: none;
 }
 
 .full-rounded {
@@ -68,12 +73,17 @@ html {
     transition: opacity 200ms;
 }
 
+.layer-cover-image {
+    max-height: 640px;
+    border-radius: 24px;
+}
+
 .masonry-item {
     transition: all 0.3s ease !important;
 }
 
 .masonry-item-cover {
-    border-radius: 18px;
+    border-radius: 24px;
 }
 
 .overlay-container {
@@ -86,7 +96,7 @@ html {
     left: 16px;
     padding: 8px;
     border-radius: 8px;
-    background-color: #00000050;
+    background-color: #00000075;
 }
 
 .text-overlay-bottom {
@@ -95,5 +105,11 @@ html {
     left: 16px;
     padding: 8px;
     border-radius: 8px;
-    background-color: #00000050;
+    background-color: #00000075;
+}
+
+.tag-overlay-bottom {
+    position: absolute;
+    bottom: 16px;
+    left: 16px;
 }

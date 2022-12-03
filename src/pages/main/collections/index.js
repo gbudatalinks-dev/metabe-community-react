@@ -1,32 +1,18 @@
 import React from "react";
 
 import { throttle } from "lodash";
-import { Box, Header, Text, Tag, Button } from "grommet";
+import { Box, Header, Text, Tag, Button, Layer } from "grommet";
 import { TbSortDescending } from "react-icons/tb";
 import StackGrid, { transitions, easings } from "react-stack-grid";
 
 import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
+import AppLayer from "../../../components/layer/app";
 import { useWindowSize } from "../../../utils/window";
 import { calGridCol } from "../../../utils/grid";
-import { randomNumberInRange } from "../../../utils/numbers";
+import { USERS, getItems } from "../../../temp/data";
 
 const transition = transitions.scaleDown;
-
-
-
-
-function getItems(nextGroupKey, count) {
-    const nextItems = [];
-    const nextKey = nextGroupKey * count;
-
-    for (let i = 0; i < count; ++i) {
-        nextItems.push({ groupKey: nextGroupKey, key: nextKey + i, playCount: randomNumberInRange(0, 3000), likeCount: randomNumberInRange(0, 1200) });
-    }
-    return nextItems;
-}
-
-
 
 export default function Collections() {
 
@@ -34,11 +20,20 @@ export default function Collections() {
     const [ windowWidth, windowHeight ] = useWindowSize();
     const landscape = windowWidth > windowHeight;
 
-    // eslint-disable-next-line no-unused-vars
-    const [ items, setItems ] = React.useState(() => getItems(1, 30));
+    const [ items, setItems ] = React.useState([]);
     const [ loadMore, setLoadMore ] = React.useState(false);
 
+    const [ selectedApp, setSelectedApp ] = React.useState(undefined);
+    const [ selectedUser, setSelectedUser ] = React.useState(undefined);
+
     React.useEffect(() => {
+        // const listAllUsers = () => {};
+
+        const loadInitialItems = () => {
+            setItems(getItems(1, 30, 1));
+        };
+
+        loadInitialItems();
     }, []);
 
     const onScroll = (e) => throttledScroll(e.target);
@@ -50,6 +45,18 @@ export default function Collections() {
             }, 300),
         [loadMore]
     );
+
+    const onAppClick = (uid) => {
+        setSelectedApp(items[uid]);
+    };
+
+    const closeAppLayer = () => {
+        setSelectedApp(undefined);
+    };
+
+    const onProfileClick = (uid) => {
+        console.log(USERS[uid]);
+    };
 
     return (
         <Box fill={true}>
@@ -76,6 +83,16 @@ export default function Collections() {
                     </Box>
                 </Box>
             </Header>
+            { selectedApp !== undefined &&
+                <Layer position={"center"} background={"background-back"}
+                       style={{ borderRadius: 24 }}
+                       onClickOutside={closeAppLayer} onEsc={closeAppLayer}
+                       modal
+                       responsive
+                >
+                    <AppLayer item={selectedApp} onClose={closeAppLayer} />
+                </Layer>
+            }
             <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: landscape? "24px" : "30px" }} overflow={"scroll"}
                  onScroll={onScroll}
             >
@@ -93,7 +110,9 @@ export default function Collections() {
                     entered={transition.entered}
                     leaved={transition.leaved}
                 >
-                    { items.map((item) => <AppCard key={item.key} item={item} />) }
+                    { items.map((item) =>
+                        <AppCard key={item.key} item={item} onAppClick={onAppClick} onProfileClick={onProfileClick} />
+                    )}
                 </StackGrid>
             </Box>
         </Box>
