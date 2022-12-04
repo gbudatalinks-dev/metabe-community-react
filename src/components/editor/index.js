@@ -1,6 +1,6 @@
 import React from "react";
 
-import {Layer, Box, Text, Button, FileInput, TextArea, Image, TextInput} from "grommet";
+import { Layer, Box, Text, Button, FileInput, TextArea, Image, TextInput } from "grommet";
 import {
     TbCirclePlus, TbPhoto, TbHandClick, TbHeading, TbLetterT, TbLayoutDistributeHorizontal
 } from "react-icons/tb";
@@ -133,7 +133,9 @@ export default function Editor() {
                      margin={{ vertical: "xsmall" }}
                      round={"medium"} align={"center"}
                 >
-                    <Button primary label={<Text color={"#eeeeee"} size={"small"}>{buttonLabel}</Text>} />
+                    <Button primary label={<Text color={"#eeeeee"} size={"small"}>{buttonLabel}</Text>}
+                            // onClick={() => window.open(buttonLink, '_blank', 'noopener,noreferrer')}
+                    />
                 </Box>
             )
         });
