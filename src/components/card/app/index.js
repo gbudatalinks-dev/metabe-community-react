@@ -5,11 +5,11 @@ import { TbHandClick, TbThumbUp } from "react-icons/tb";
 
 import { numberToString } from "../../../utils/numbers";
 
-export default function AppCard({ item, onAppClick, onProfileClick }) {
+export default function AppCard({ item, target, onAppClick, onUserClick }) {
 
     return (
         <Box className="masonry-item" gap={"small"} margin={{ bottom: "small" }}>
-            <Box className="overlay-container disabled-focus" onClick={() => {onAppClick(item.uid)}}>
+            <Box className="overlay-container disabled-focus" onClick={() => {onAppClick(target, item.uid)}}>
                 <Image fit="cover" fill className="masonry-item-cover"
                        src={item.cover}
                 />
@@ -25,8 +25,14 @@ export default function AppCard({ item, onAppClick, onProfileClick }) {
                 </Box>
             </Box>
             <Box direction={"row"} justify={"between"} align={"center"}>
-                <Box className="disabled-focus" direction={"row"} align={"center"} gap={"8px"} onClick={() => onProfileClick(item.user.uid)}>
-                    <Avatar src={item.user.avatar} size={"small"} />
+                <Box className="disabled-focus" direction={"row"} align={"center"} gap={"8px"}
+                     onClick={() => {
+                         if (onUserClick !== undefined) {
+                             onUserClick(item.user.uid);
+                         }
+                     }}
+                >
+                    <Avatar src={item.user.photoURL} size={"small"} align={"center"} justify={"center"} />
                     <Text size={"xsmall"}>
                         { item.user.name }
                     </Text>

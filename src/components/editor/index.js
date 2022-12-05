@@ -32,7 +32,6 @@ export default function Editor() {
     const onImageUploadClose = () => setImageUploadOpen(false);
 
     const [ buttonLabel, setButtonLabel ] = React.useState(undefined);
-    // eslint-disable-next-line no-unused-vars
     const [ buttonLink, setButtonLink ] = React.useState(undefined);
     const [ buttonMenuOpen, setButtonMenuOpen ] = React.useState(false);
     const onButtonMenuClose = () => setButtonMenuOpen(false);

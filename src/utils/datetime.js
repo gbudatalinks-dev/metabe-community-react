@@ -12,7 +12,12 @@ export const toDate = str => {
     return datetime.format("YYYY.MM.DD");
 };
 
-export const toShortDateTime = (str, forced) => {
+export const formatDate = (str) => {
+    const datetime = new moment.utc(str, "YYYYMMDDHHmmssSSS").local();
+    return datetime.format("YYYY년 MM월 DD일");
+};
+
+export const formatDateTime = (str) => {
     if (str === undefined || str === null) {
         return "";
     }
@@ -23,12 +28,15 @@ export const toShortDateTime = (str, forced) => {
     if (
         (datetime.year() === now.year() &&
             datetime.month() === now.month() &&
-            datetime.date() === now.date()) ||
-        forced === true
+            datetime.date() === now.date())
     ) {
         return datetime.format("a h:mm");
-    } else {
+    }
+    else if (datetime.year() === now.year()) {
         return datetime.format("MM월 DD일");
+    }
+    else {
+        return datetime.format("YYYY년 MM월 DD일");
     }
 };
 

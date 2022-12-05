@@ -1,5 +1,11 @@
 import { FormTrash } from "grommet-icons";
 import { TbCaretDown, TbCaretUp } from "react-icons/tb";
+import { css } from "styled-components";
+
+const checkboxCheckStyle = css`
+  background-color: #ff5a01;
+  border-color: #ff5a01;
+`;
 
 export const DEFAULT_THEME = {
     global: {
@@ -56,7 +62,7 @@ export const DEFAULT_THEME = {
             "status-disabled": "#CCCCCC",
             "graph-0": "brand",
             "graph-1": "status-warning",
-            "focus": "brand"
+            "focus": "brand",
         },
         font: {
             family: "Poppins"
@@ -269,5 +275,43 @@ export const DEFAULT_THEME = {
                 color: #cccccc;
             `,
         },
+    },
+    checkBox: {
+        border: {
+            color: {
+                dark: "brand",
+            },
+        },
+        color: {
+            dark: "#eeeeee",
+        },
+        check: {
+            radius: "2px",
+        },
+        hover: {
+            border: {
+                color: undefined,
+            },
+        },
+        toggle: {
+            background: "background",
+            color: {
+                dark: "#eeeeee"
+            },
+            size: "36px",
+            knob: {
+                extend: `
+                    top: -3px;
+                    box-shadow: 0px 0px 2px 0px rgba(0,0,0,0.12), 0px 2px 2px 0px rgba(0,0,0,0.24);
+                `,
+            },
+            extend: ({ checked }) => `
+                height: 16px;
+                box-shadow: none !important;
+                ${checked && checkboxCheckStyle}
+            `,
+        },
+        gap: "xsmall",
+        size: "18px",
     },
 };

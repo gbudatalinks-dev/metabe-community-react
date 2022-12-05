@@ -58,7 +58,12 @@ export default function PageHeader() {
                                 <Text size={"small"}>
                                     { globalState.user.name }
                                 </Text>
-                                <Anchor color={"brand"} size={"small"} onClick={() => navigate("/main/profile")}>
+                                <Anchor color={"brand"} size={"small"}
+                                        onClick={() => {
+                                            onContextMenuClose();
+                                            navigate("/main/profile");
+                                        }}
+                                >
                                     계정 관리
                                 </Anchor>
                             </Box>

@@ -68,6 +68,7 @@ export default function SignIn(props) {
                 email: user.email,
                 name: user.displayName,
                 photoURL: user.photoURL,
+                tags: [],
                 rank: 0,
                 appCount: 0,
                 subscriberCount: 0,

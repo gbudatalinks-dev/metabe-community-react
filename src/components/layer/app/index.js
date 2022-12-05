@@ -4,7 +4,7 @@ import { Box, Image, Button, Text, Layer, FileInput, TextArea, Avatar } from "gr
 import { TbHandClick, TbMessage2, TbThumbUp, TbX, TbSend, TbDotsVertical } from "react-icons/tb";
 import parse from "html-react-parser";
 
-import { utcDateTime, toShortDateTime } from "../../../utils/datetime";
+import { utcDateTime, formatDateTime, formatDate } from "../../../utils/datetime";
 import { strReplace } from "../../../utils/strings";
 import { numberToString } from "../../../utils/numbers";
 
@@ -21,7 +21,6 @@ export default function AppLayer({ item, onClose }) {
     const textAreaRef = React.useRef(null);
 
     const [ data, setData ] = React.useState({ ...item, comments: [] });
-    // eslint-disable-next-line no-unused-vars
     const [ file, setFile ] = React.useState(undefined);
 
     const [ comment, setComment ] = React.useState("");
@@ -92,14 +91,14 @@ export default function AppLayer({ item, onClose }) {
                             <Box gap={"small"}>
                                 { data.comments.map((comment, index) =>
                                     <Box key={index} direction={"row"} gap={"small"} background={"background-front"} pad={"medium"} round={"medium"}>
-                                        <Avatar src={comment.user.avatar} size={"32px"} />
+                                        <Avatar src={comment.user.photoURL} size={"32px"} />
                                         <Box flex gap={"xsmall"}>
                                             <Box direction={"row"} align={"center"} gap={"small"}>
                                                 <Text size={"small"} weight={"bolder"}>
                                                     { comment.user.name }
                                                 </Text>
                                                 <Text size={"xsmall"} color={"text-weak"}>
-                                                    { toShortDateTime(comment.datetime) }
+                                                    { formatDateTime(comment.datetime) }
                                                 </Text>
                                             </Box>
                                             <Text size={"small"} truncate>
@@ -130,16 +129,29 @@ export default function AppLayer({ item, onClose }) {
                     </Box>
                 </Box>
                 <Box flex gap={"medium"} align={"start"} justify={"between"}>
-                    <Box direction={"row"} gap={"small"} pad={{ horizontal: "small" }}>
-                        { data.tags.map((tag, index) =>
-                            <Box key={index} pad={{ horizontal: "small", vertical: "4px" }} round={"medium"} style={{ border: "1px solid #ff5a01" }}>
-                                <Text size={"xsmall"} color={"#eeeeee"} weight={"bolder"}>
-                                    { tag }
+                    <Box width={"100%"} gap={"small"}>
+                        <Box direction={"row"} gap={"small"} align={"center"}>
+                            <Avatar src={item.user.photoURL} size={"small"} />
+                            <Box>
+                                <Text size={"small"}>
+                                    { item.user.name }
+                                </Text>
+                                <Text size={"11px"} color={"text-xweak"}>
+                                    { formatDate(item.updated) }
                                 </Text>
                             </Box>
-                        )}
+                        </Box>
+                        <Box width={"100%"} direction={"row"} gap={"small"} wrap>
+                            { data.tags.map((tag, index) =>
+                                <Box key={index} pad={{ horizontal: "small", vertical: "2px" }} margin={{ bottom: "xsmall" }} round={"medium"} border={{ size: "xsmall", color: "brand" }}>
+                                    <Text size={"xsmall"} color={"#eeeeee"} weight={"bolder"}>
+                                        { tag }
+                                    </Text>
+                                </Box>
+                            )}
+                        </Box>
                     </Box>
-                    <Box pad={{ horizontal: "small" }} direction={"row"} gap={"small"}>
+                    <Box direction={"row"} gap={"small"}>
                         <Button size={"small"} secondary
                                 icon={<TbHandClick size={14} color={"#eeeeee"} style={{ marginTop: -2 }} />}
                                 label={

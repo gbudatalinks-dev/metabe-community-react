@@ -1,98 +1,26 @@
 import React from "react";
 
 import {
-    Box, FileInput, Select, TextInput, Tabs, Tab, Button, Keyboard, Text, Layer, Spinner
+    Box, FileInput, Select, TextInput, Tabs, Tab, Button, Text, Layer, Spinner
 } from "grommet";
-import { FormClose } from 'grommet-icons';
 import { TbCloudUpload, TbX, TbId } from "react-icons/tb";
 
 import axios from "axios";
 
+import TagInput from "../../tag";
 import Editor from "../../editor";
 import { isEmptyStr } from "../../../utils/strings";
 
 const TYPES = ["IMAGE", "POSE"];
 
-const Tag = ({ children, onRemove, ...rest }) => {
-    const tag = (
-        <Box
-            direction={"row"}
-            align={"center"}
-            background={"brand"}
-            pad={{ horizontal: "10px" }}
-            round={"medium"}
-            style={{ marginTop: 12, height: 43 }}
-            {...rest}
-        >
-            <Text size={"13px"} color={"#eeeeee"} margin={{ horizontal: "xsmall" }}>
-                { children }
-            </Text>
-            { onRemove && <FormClose size={"small"} color={"white"} /> }
-        </Box>
-    );
-
-    if (onRemove) {
-        return <Button onClick={onRemove} margin={{ bottom: "none", right: "xsmall" }}>{tag}</Button>;
-    }
-
-    return tag;
-};
-
-const TagInput = ({ value = [], onAdd, onChange, onRemove, ...rest }) => {
-    const [ currentTag, setCurrentTag ] = React.useState("");
-    const boxRef = React.useRef();
-
-    const updateCurrentTag = (event) => {
-        setCurrentTag(event.target.value);
-        if (onChange) {
-            onChange(event);
-        }
-    };
-
-    const onAddTag = (tag) => {
-        if (onAdd) {
-            onAdd(tag);
-        }
-    };
-
-    const onEnter = () => {
-        if (currentTag.length) {
-            onAddTag(currentTag);
-            setCurrentTag("");
-        }
-    };
-
-    const renderValue = () => value.map((v, index) => (
-        <Tag key={`${v}${index + 0}`} onRemove={() => onRemove(v)}>
-            { v }
-        </Tag>
-    ));
-
-    return (
-        <Keyboard onEnter={onEnter}>
-            <Box direction={"row"} align={"center"} ref={boxRef} wrap style={{ marginTop: -12 }}>
-                { value.length > 0 && renderValue() }
-                <Box flex style={{ minWidth: "120px", marginTop: 12 }}>
-                    <TextInput plain {...rest} onChange={updateCurrentTag} value={currentTag}
-                               style={{ padding: "11px 17px", fontSize: 14, border: "1px solid #1c1d24" }}
-                    />
-                </Box>
-            </Box>
-        </Keyboard>
-    );
-};
-
 export default function UploadApp({ onClose }) {
 
-    // eslint-disable-next-line no-unused-vars
     const [ uploading, setUploading ] = React.useState(false);
     const [ type, setType ] = React.useState(TYPES[0]);
     const [ name, setName ] = React.useState("");
-    // eslint-disable-next-line no-unused-vars
     const [ cover, setCover ] = React.useState(undefined);
     const [ modelUrl, setModelUrl ] = React.useState("");
     const [ tags, setTags ] = React.useState([]);
-    // eslint-disable-next-line no-unused-vars
     const [ description, setDescription ] = React.useState("");
     const [ labels, setLabels ] = React.useState([]);
     const [ metadataLoading, setMetadataLoading ] = React.useState(false);
@@ -221,9 +149,9 @@ export default function UploadApp({ onClose }) {
                 </Box>
             }
             { tabIndex === 1 &&
-                <Box direction={"row"} gap={"medium"}>
+                <Box direction={"row"} gap={"medium"} height={"600px"}>
                     { labels.map((label, index) =>
-                        <Box width={`${100 / labels.length }%`} height={"600px"} key={index} align={"center"} gap={"small"}>
+                        <Box width={`${100 / labels.length }%`} key={index} align={"center"} gap={"small"}>
                             <TextInput name={`label-${index}`} value={label.name}
                                        icon={<TbId color={"#cccccc"} style={{ marginLeft: 6 }} />}
                                        style={{ fontSize: 14, }}

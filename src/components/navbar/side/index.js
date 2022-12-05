@@ -1,8 +1,8 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { Sidebar, Nav, Button, Box } from "grommet";
 import {
-    TbCircleSquare, TbListSearch, TbBrandMessenger, TbLayoutDashboard,
+    TbCircleSquare, TbListSearch, TbLayoutDashboard, TbTrophy,
     TbBook, TbLogout
 } from "react-icons/tb";
 import { signOut } from "firebase/auth";
@@ -12,12 +12,11 @@ import { AppContext } from "../../../context";
 export default function SideBar() {
 
     const { signOutAction } = React.useContext(AppContext);
-    const navigate = useNavigate();
 
-    const [ current, setCurrent ] = React.useState("/main/home");
+    const navigate = useNavigate();
+    const location = useLocation();
 
     const route = (path) => {
-        setCurrent(path);
         navigate(path, { replace: true });
     };
 
@@ -48,7 +47,8 @@ export default function SideBar() {
             }
             footer={
                 <Box pad={{ horizontal: "small", vertical: "medium" }} gap={"small"} border={"top"} align={"center"}>
-                    <Button icon={<TbBook size={24} />}
+                    <Button icon={<TbBook size={24} color={"#eeeeee"} />}
+                            primary={location.pathname === "/main/guide"}
                             onClick={() => route("/main/guide")}
                     />
                     <Button icon={<TbLogout size={24} />}
@@ -60,16 +60,20 @@ export default function SideBar() {
         >
             <Nav gap="small" pad={"small"} align={"center"}>
                 <Button icon={<TbListSearch size={24} color={"#eeeeee"} />}
-                        primary={current === "/main/home"}
+                        primary={(location.pathname === "/main" || location.pathname === "/main/home")}
                         onClick={() => route("/main/home")}
                 />
                 <Button icon={<TbLayoutDashboard size={24} color={"#eeeeee"} />}
-                        primary={current === "/main/collections"}
+                        primary={location.pathname === "/main/collections"}
                         onClick={() => route("/main/collections")}
                 />
-                <Button icon={<TbBrandMessenger size={24} color={"#eeeeee"} />}
-                        primary={current === "/main/chats"}
-                        onClick={() => route("/main/chats")}
+                {/*<Button icon={<TbBrandMessenger size={24} color={"#eeeeee"} />}*/}
+                {/*        primary={current === "/main/chats"}*/}
+                {/*        onClick={() => route("/main/chats")}*/}
+                {/*/>*/}
+                <Button icon={<TbTrophy size={24} color={"#eeeeee"} />}
+                        primary={location.pathname === "/main/awards"}
+                        onClick={() => route("/main/awards")}
                 />
             </Nav>
         </Sidebar>

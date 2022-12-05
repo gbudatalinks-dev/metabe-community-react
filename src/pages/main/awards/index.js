@@ -3,7 +3,7 @@ import React from "react";
 import { Box, Text } from "grommet";
 import { TbBackhoe } from "react-icons/tb";
 
-export default function Guide() {
+export default function Awards() {
 
     return (
         <Box fill>

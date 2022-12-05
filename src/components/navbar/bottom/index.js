@@ -1,16 +1,15 @@
 import React from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 
 import { Box, Button } from "grommet";
-import { TbBrandMessenger, TbLayoutDashboard, TbListSearch } from "react-icons/tb";
+import { TbListSearch, TbLayoutDashboard, TbTrophy } from "react-icons/tb";
 
 export default function BottomBar() {
 
     const navigate = useNavigate();
-    const [ current, setCurrent ] = React.useState("/main/home");
+    const location = useLocation();
 
     const route = (path) => {
-        setCurrent(path);
         navigate(path, { replace: true });
     };
 
@@ -20,16 +19,20 @@ export default function BottomBar() {
                  gap={"medium"} direction={"row"}
             >
                 <Button icon={<TbListSearch size={18} color={"#eeeeee"} />}
-                        primary={current === "/main/home"}
+                        primary={(location.pathname === "/main" || location.pathname === "/main/home")}
                         onClick={() => route("/main/home")}
                 />
                 <Button icon={<TbLayoutDashboard size={18} color={"#eeeeee"} />}
-                        primary={current === "/main/collections"}
+                        primary={location.pathname === "/main/collections"}
                         onClick={() => route("/main/collections")}
                 />
-                <Button icon={<TbBrandMessenger size={18} color={"#eeeeee"} />}
-                        primary={current === "/main/chats"}
-                        onClick={() => route("/main/chats")}
+                {/*<Button icon={<TbBrandMessenger size={18} color={"#eeeeee"} />}*/}
+                {/*        primary={current === "/main/chats"}*/}
+                {/*        onClick={() => route("/main/chats")}*/}
+                {/*/>*/}
+                <Button icon={<TbTrophy size={18} color={"#eeeeee"} />}
+                        primary={location.pathname === "/main/awards"}
+                        onClick={() => route("/main/awards")}
                 />
             </Box>
         </Box>

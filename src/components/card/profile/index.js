@@ -6,26 +6,27 @@ import { TbMedal, TbTags, TbDashboard, TbApps, TbToggleRight, TbHandClick } from
 import { numberToString } from "../../../utils/numbers";
 import { getRankColor }from "../../../utils/colors";
 
-export default function ProfileCard({ item }) {
+export default function ProfileCard({ item, onUserClick }) {
 
     return (
-        <Box className="masonry-item"
-             gap={"medium"} margin={{ bottom: "small" }} pad={"medium"}
+        <Box className="masonry-item disabled-focus"
+             width={"100%"} gap={"medium"} margin={{ bottom: "small" }} pad={"medium"}
              background={"background-front"}
              round={"medium"}
+             onClick={() => onUserClick(item.uid)}
         >
-            <Box direction={"row"} gap={"small"} align={"stretch"}>
+            <Box width={"100%"} direction={"row"} gap={"small"} align={"stretch"}>
                 <Avatar src={item.photoURL} />
-                <Box gap={"xsmall"} flex={"grow"} justify={"center"}>
+                <Box flex gap={"xsmall"}>
                     <Box direction={"row"} gap={"xsmall"} align={"center"}>
                         <Text size={"small"}>
                             { item.name }
                         </Text>
 
                     </Box>
-                    <Box direction={"row"} gap={"xsmall"}>
+                    <Box direction={"row"} gap={"xsmall"} wrap>
                         <TbTags color={"#ff5a01"} />
-                        { item.tags && item.tags.map((tag, index) =>
+                        { item.tags !== undefined && item.tags.length > 0 && item.tags.map((tag, index) =>
                             <Text key={index} size={"xsmall"} color={"text-xweak"}>
                                 { tag }
                             </Text>

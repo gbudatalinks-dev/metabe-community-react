@@ -3,8 +3,6 @@ import React from "react";
 import { Box, TextInput, Avatar, Stack, Text, Header, Footer, Button } from "grommet";
 import { TbSearch, TbSend } from "react-icons/tb";
 
-import PageHeader from "../../../components/header";
-
 const users = [
     { avatar: "http://t1.gstatic.com/licensed-image?q=tbn:ANd9GcRjyV6aufEiVlt_Jpu7io7LcQpp-weqg-iFIn2GoR5X7jjzvHhck05_alsHCnGc4Qgt", name: "Amanda Seyfried", isMe: false, },
     { avatar: "https://img.seoul.co.kr/img/upload/2017/08/17/SSI_20170817084646_O2.jpg", name: "Thomas Cruise", isMe: false, },
@@ -28,7 +26,7 @@ const MessageBox = ({ message, users, isContinuous }) => {
         <Box align={user.isMe ? "end" : "start"}>
             { user.isMe === false && isContinuous === false &&
                 <Box margin={{ bottom: "small" }} align={"center"} direction={"row"} gap={"xsmall"}>
-                    <Avatar src={user.avatar} size={"small"} />
+                    <Avatar src={user.photoURL} size={"small"} />
                     <Text size={"xsmall"} weight={"bolder"}>
                         { user.name }
                     </Text>
@@ -50,7 +48,6 @@ export default function Chats(props) {
 
     return (
         <Box fill>
-            <PageHeader />
             <Box direction={"row"} fill>
                 <Box width={"450px"} pad={{ vertical: "medium"}} margin={{ top: "small", bottom: "30px", left: "medium" }} gap={"medium"}
                      background={"background-front"} align={"center"} round={"medium"}
@@ -68,7 +65,7 @@ export default function Chats(props) {
                             <Stack anchor={"bottom-right"}>
                                 <Box>
                                     <Box direction="row">
-                                        <Avatar src={users[0].avatar} size={"44px"} />
+                                        <Avatar src={users[0].photoURL} size={"44px"} />
                                         <Box pad={"2px"} />
                                     </Box>
                                     <Box pad={"2px"} />
@@ -103,7 +100,7 @@ export default function Chats(props) {
                             <Stack anchor={"bottom-right"}>
                                 <Box>
                                     <Box direction="row">
-                                        <Avatar src={users[1].avatar} size={"44px"} />
+                                        <Avatar src={users[1].photoURL} size={"44px"} />
                                         <Box pad={"2px"} />
                                     </Box>
                                     <Box pad={"2px"} />
@@ -142,7 +139,7 @@ export default function Chats(props) {
                             <Stack anchor={"top-right"}>
                                 <Box>
                                     <Box direction="row">
-                                        <Avatar src={users[0].avatar} size={"36px"} />
+                                        <Avatar src={users[0].photoURL} size={"36px"} />
                                         <Box pad={"2px"} />
                                     </Box>
                                     <Box pad={"2px"} />

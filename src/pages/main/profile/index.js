@@ -3,37 +3,41 @@ import React from "react";
 import {
     Box, Header, Avatar, Text, Tab, Tabs, Stack, Button
 } from "grommet";
-import { TbPencil } from "react-icons/tb";
+import { TbPencil, TbMedal } from "react-icons/tb";
 import StackGrid, { transitions, easings } from "react-stack-grid";
 
 import { AppContext } from "../../../context";
-import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
 import ProfileCard from "../../../components/card/profile";
-import { useWindowSize } from "../../../utils/window";
-
-import { getItems, getProfiles } from "../../../temp/data";
+import TagInput from "../../../components/tag";
+import { getRankColor } from "../../../utils/colors";
 
 const transition = transitions.scaleDown;
 
-export default function Profile(props) {
+export default function Profile({ cardWidth, isLandscape, myApps, bookmarks, subscriptions, onAppClick, onUserClick }) {
 
     const { globalState } = React.useContext(AppContext);
-    const [ windowWidth ] = useWindowSize();
 
     const [ tabIndex, setTabIndex ]= React.useState(0);
     const onActive = (nextIndex) => setTabIndex(nextIndex);
 
-    // eslint-disable-next-line no-unused-vars
-    const [ apps, setApps ] = React.useState(() => getItems(0, 10));
-    // eslint-disable-next-line no-unused-vars
-    const [ bookmarks, setBookmarks ] = React.useState(() => getItems(1, 20));
-    // eslint-disable-next-line no-unused-vars
-    const [ subscriptions, setSubscriptions ] = React.useState(getProfiles());
+    const [ photoURL, setPhotoURL ] = React.useState(globalState.user.photoURL);
+    const [ name, setName ] = React.useState(globalState.user.name);
+    const [ tags, setTags ] = React.useState(globalState.user.tags);
+
+    const onRemoveTag = (tag) => {
+        const removeIndex = tags.indexOf(tag);
+        const newTags = [...tags];
+        if (removeIndex >= 0) {
+            newTags.splice(removeIndex, 1);
+        }
+        setTags(newTags);
+    };
+
+    const onAddTag = (tag) => setTags([...tags, tag]);
 
     return (
-        <Box fill={true}>
-            <PageHeader />
+        <Box fill>
             <Header direction={"column"}>
                 <Box width={"100%"} align={"center"} pad={{ top: "medium" }} gap={"medium"}>
                     <Stack anchor={"bottom"}>
@@ -44,6 +48,7 @@ export default function Profile(props) {
                         />
                     </Stack>
                     <Box direction={"row"} gap={"xsmall"} align={"center"}>
+                        <TbMedal size={"24px"} color={getRankColor(globalState.user.rank)} style={{ marginRight: 6 }} />
                         <Text margin={{ top: "1px" }}>
                             { globalState.user.name }
                         </Text>
@@ -53,6 +58,7 @@ export default function Profile(props) {
                                 hoverIndicator
                         />
                     </Box>
+                    <TagInput placeholder="태그" value={tags} onRemove={onRemoveTag} onAdd={onAddTag} pad={7} />
                 </Box>
                 <Box width={"xxlarge"} align={"center"} pad={"medium"} responsive>
                     <Tabs activeIndex={tabIndex} onActive={onActive} justify="start">
@@ -62,11 +68,11 @@ export default function Profile(props) {
                     </Tabs>
                 </Box>
             </Header>
-            <Box width={"xxlarge"} alignSelf={"center"} margin={{ bottom: "medium" }} overflow={"scroll"}>
+            <Box width={"100%"} pad={{ horizontal: "medium" }} margin={{ bottom: isLandscape? "18px" : "30px" }} overflow={"scroll"}>
                 { tabIndex === 0 &&
                     <StackGrid
                         monitorImagesLoaded
-                        columnWidth={(windowWidth * 0.7 - 20 * 6 - 100) / 5}
+                        columnWidth={cardWidth}
                         duration={600}
                         gutterWidth={20}
                         gutterHeight={20}
@@ -78,13 +84,13 @@ export default function Profile(props) {
                         entered={transition.entered}
                         leaved={transition.leaved}
                     >
-                        { apps.map((item) => <AppCard key={item.key} item={item}/>) }
+                        { myApps.map((item) => <AppCard key={item.uid} item={item} target={"myApps"} onAppClick={onAppClick} onUserClick={onUserClick} />) }
                     </StackGrid>
                 }
                 { tabIndex === 1 &&
                     <StackGrid
                         monitorImagesLoaded
-                        columnWidth={(windowWidth * 0.7 - 20 * 6 - 100) / 5}
+                        columnWidth={cardWidth}
                         duration={600}
                         gutterWidth={20}
                         gutterHeight={20}
@@ -96,13 +102,13 @@ export default function Profile(props) {
                         entered={transition.entered}
                         leaved={transition.leaved}
                     >
-                        { bookmarks.map((item) => <AppCard key={item.key} item={item}/>) }
+                        { bookmarks.map((item) => <AppCard key={item.uid} item={item} target={"bookmarks"} onAppClick={onAppClick} onUserClick={onUserClick} />) }
                     </StackGrid>
                 }
                 { tabIndex === 2 &&
                     <StackGrid
                         monitorImagesLoaded
-                        columnWidth={(windowWidth * 0.7 - 20 * 6 - 100) / 4}
+                        columnWidth={cardWidth}
                         duration={600}
                         gutterWidth={20}
                         gutterHeight={20}
@@ -114,7 +120,7 @@ export default function Profile(props) {
                         entered={transition.entered}
                         leaved={transition.leaved}
                     >
-                        { subscriptions.map((item) => <ProfileCard key={item.key} item={item}/>) }
+                        { subscriptions.map((item) => <ProfileCard key={item.uid} item={item} onUserClick={onUserClick} />) }
                     </StackGrid>
                 }
             </Box>
