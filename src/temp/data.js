@@ -37,3 +37,24 @@ export function getItems(nextGroupKey, count, deviation) {
     }
     return nextItems;
 }
+
+export function getProfiles() {
+    const profiles = [];
+
+    for (let i = 0; i < 7; i++) {
+        profiles.push({
+            key: i + 1,
+            name: USERS[i].name,
+            photoURL: USERS[i].avatar,
+            tags: ["TAG", "TEST", "AI", "APPS"],
+            rank: randomNumberInRange(0, 12000),
+            appCount: randomNumberInRange(5, 20),
+            subscriberCount: randomNumberInRange(10, 2000),
+            playCount: randomNumberInRange(10, 10000),
+            likeCount: randomNumberInRange(10, 1000),
+        });
+    }
+
+    return profiles;
+}
+

@@ -11,43 +11,10 @@ import PageHeader from "../../../components/header";
 import AppCard from "../../../components/card/app";
 import ProfileCard from "../../../components/card/profile";
 import { useWindowSize } from "../../../utils/window";
-import { randomNumberInRange } from "../../../utils/numbers";
+
+import { getItems, getProfiles } from "../../../temp/data";
 
 const transition = transitions.scaleDown;
-
-
-
-function getAppItems(nextGroupKey, count) {
-    const nextItems = [];
-    const nextKey = nextGroupKey * count;
-
-    for (let i = 0; i < count; ++i) {
-        nextItems.push({ groupKey: nextGroupKey, key: nextKey + i, playCount: randomNumberInRange(0, 3000), likeCount: randomNumberInRange(0, 1200) });
-    }
-    return nextItems;
-}
-
-function getProfiles(count) {
-    const profiles = [];
-
-    for (let i = 0; i < count; i++) {
-        profiles.push({
-            key: i + 1,
-            name: "TestUSER",
-            photoURL: "https://s.gravatar.com/avatar/b7fb138d53ba0f573212ccce38a7c43b?s=80",
-            tags: ["TAG", "TEST", "AI", "APPS"],
-            rank: randomNumberInRange(0, 12000),
-            appCount: randomNumberInRange(5, 20),
-            subscriberCount: randomNumberInRange(10, 2000),
-            playCount: randomNumberInRange(10, 10000),
-            likeCount: randomNumberInRange(10, 1000),
-        });
-    }
-
-    return profiles;
-}
-
-
 
 export default function Profile(props) {
 
@@ -57,9 +24,12 @@ export default function Profile(props) {
     const [ tabIndex, setTabIndex ]= React.useState(0);
     const onActive = (nextIndex) => setTabIndex(nextIndex);
 
-    const [ apps, setApps ] = React.useState(() => getAppItems(0, 10));
-    const [ bookmarks, setBookmarks ] = React.useState(() => getAppItems(1, 20));
-    const [ subscriptions, setSubscriptions ] = React.useState(getProfiles(10));
+    // eslint-disable-next-line no-unused-vars
+    const [ apps, setApps ] = React.useState(() => getItems(0, 10));
+    // eslint-disable-next-line no-unused-vars
+    const [ bookmarks, setBookmarks ] = React.useState(() => getItems(1, 20));
+    // eslint-disable-next-line no-unused-vars
+    const [ subscriptions, setSubscriptions ] = React.useState(getProfiles());
 
     return (
         <Box fill={true}>

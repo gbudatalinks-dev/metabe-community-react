@@ -21,6 +21,7 @@ export default function AppLayer({ item, onClose }) {
     const textAreaRef = React.useRef(null);
 
     const [ data, setData ] = React.useState({ ...item, comments: [] });
+    // eslint-disable-next-line no-unused-vars
     const [ file, setFile ] = React.useState(undefined);
 
     const [ comment, setComment ] = React.useState("");
@@ -153,7 +154,7 @@ export default function AppLayer({ item, onClose }) {
                                 primary={!like} secondary={like}
                                 icon={<TbThumbUp size={15} color={"#eeeeee"} />}
                                 label={
-                                    <Text size={"xsmall"} color={"#eeeeee"} color={"#eeeeee"} style={{ marginLeft: -5 }}>
+                                    <Text size={"xsmall"} color={"#eeeeee"} style={{ marginLeft: -5 }}>
                                         { numberToString(data.likeCount) }
                                     </Text>
                                 }

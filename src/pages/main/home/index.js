@@ -26,6 +26,7 @@ export default function Home() {
     const [ loadMore, setLoadMore ] = React.useState(false);
 
     const [ selectedApp, setSelectedApp ] = React.useState(undefined);
+    // eslint-disable-next-line no-unused-vars
     const [ selectedUser, setSelectedUser ] = React.useState(undefined);
 
     React.useEffect(() => {

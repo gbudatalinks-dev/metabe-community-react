@@ -84,12 +84,15 @@ const TagInput = ({ value = [], onAdd, onChange, onRemove, ...rest }) => {
 
 export default function UploadApp({ onClose }) {
 
+    // eslint-disable-next-line no-unused-vars
     const [ uploading, setUploading ] = React.useState(false);
     const [ type, setType ] = React.useState(TYPES[0]);
     const [ name, setName ] = React.useState("");
+    // eslint-disable-next-line no-unused-vars
     const [ cover, setCover ] = React.useState(undefined);
     const [ modelUrl, setModelUrl ] = React.useState("");
     const [ tags, setTags ] = React.useState([]);
+    // eslint-disable-next-line no-unused-vars
     const [ description, setDescription ] = React.useState("");
     const [ labels, setLabels ] = React.useState([]);
     const [ metadataLoading, setMetadataLoading ] = React.useState(false);

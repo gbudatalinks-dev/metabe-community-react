@@ -32,6 +32,7 @@ export default function Editor() {
     const onImageUploadClose = () => setImageUploadOpen(false);
 
     const [ buttonLabel, setButtonLabel ] = React.useState(undefined);
+    // eslint-disable-next-line no-unused-vars
     const [ buttonLink, setButtonLink ] = React.useState(undefined);
     const [ buttonMenuOpen, setButtonMenuOpen ] = React.useState(false);
     const onButtonMenuClose = () => setButtonMenuOpen(false);
@@ -62,7 +63,6 @@ export default function Editor() {
                     <Box key={nextId.current} ref={newRef}
                          margin={{ vertical: "xsmall" }}
                          round={"medium"} overflow={"hidden"}
-                         border={{ size: "xsmall", color: "brand", style: "dashed" }}
                     >
                         <Image style={{ borderRadius: 24 }}
                                src={imageSource}
@@ -87,7 +87,8 @@ export default function Editor() {
             ref: newRef,
             component: (
                 <TextArea key={nextId.current} ref={newRef}
-                          size={"large"} style={{ color: "#ff5a01", fontSize: 18, width: "100%", height: 50, marginTop: 6, border: "1px dashed #ff5a01" }}
+                          size={"large"} style={{ color: "#eeeeee", fontSize: 18, width: "100%", height: 50, marginTop: 6 }}
+                          placeholder={"내용을 입력하세요."}
                           onInput={() => auto_grow(newRef, 50)}
                           onBlur={() => console.log("done")}
                 />
@@ -106,7 +107,8 @@ export default function Editor() {
             ref: newRef,
             component: (
                 <TextArea key={nextId.current} ref={newRef}
-                          size={"small"} style={{ width: "100%", fontSize: 12, height: 42, marginTop: 6, border: "1px dashed #ff5a01" }}
+                          size={"small"} style={{ width: "100%", fontSize: 12, height: 42, marginTop: 6 }}
+                          placeholder={"내용을 입력하세요."}
                           onInput={() => auto_grow(newRef, 42)}
                           onBlur={() => console.log("done")}
                 />
