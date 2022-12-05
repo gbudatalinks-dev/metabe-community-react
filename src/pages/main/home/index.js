@@ -95,19 +95,19 @@ export default function Home() {
                 <Box gap={"xlarge"} direction={"row"} width={"100%"}>
                     <Box flex={true} align={"start"} direction={"row"} gap={"small"}>
                         <Tag value={"전체"} size={"small"}
-                             style={{ padding: "0 8px", backgroundColor: "#ff5a01" }}
+                             style={{ padding: "2px 8px", backgroundColor: "#FF8341" }}
                              onClick={() => console.log("select") }
                         />
                         <Tag value={"최신 업로드"} size={"small"}
-                             style={{ padding: "0 8px", borderColor: "#ff5a01" }}
+                             style={{ padding: "2px 8px", borderColor: "#FF8341" }}
                              onClick={() => console.log("select") }
                         />
                         <Tag value={"최근 이용한 앱"} size={"small"}
-                             style={{ padding: "0 8px", borderColor: "#ff5a01" }}
+                             style={{ padding: "2px 8px", borderColor: "#FF8341" }}
                              onClick={() => console.log("select") }
                         />
                         <Tag value={"검색 스트링"} size={"small"}
-                             style={{ padding: "0 8px", backgroundColor: "#ff5a01" }}
+                             style={{ padding: "2px 8px", backgroundColor: "#FF8341" }}
                              onRemove={() => console.log("remove") }
                         />
                     </Box>

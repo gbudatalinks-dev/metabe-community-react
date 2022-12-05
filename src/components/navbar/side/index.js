@@ -35,6 +35,7 @@ export default function SideBar() {
 
     return (
         <Sidebar
+            background={"#363636"}
             pad={"xsmall"}
             border={"right"}
             header={

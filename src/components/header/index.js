@@ -39,17 +39,17 @@ export default function PageHeader() {
     return (
         <>
             { contextMenuOpen &&
-                <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "24px" }} background={"#282828"}
+                <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "74px" }} background={"#282828"}
                        style={{ borderRadius: 16 }}
                        onClickOutside={onContextMenuClose} onEsc={onContextMenuClose}
                        modal
                        responsive
                 >
-                    <Box pad={{ vertical: "small" }} gap={"small"}>
+                    <Box pad={{ vertical: "medium" }} gap={"small"}>
                         <Box gap={"small"} align={"center"} direction={"row"} pad={{ horizontal: "medium" }} margin={{ right: "small" }}>
-                            <Avatar src={globalState.user.photoURL} size={"32px"} style={{ border: "solid 2px #ff5a01"}} />
-                            <Box gap={"xsmall"}>
-                                <Text size={"small"}>
+                            <Avatar src={globalState.user.photoURL} size={"42px"} style={{ border: "solid 2px #FF8341"}} />
+                            <Box gap={"xxsmall"}>
+                                <Text size={"18px"}>
                                     { globalState.user.name }
                                 </Text>
                                 <Anchor color={"brand"} size={"small"} onClick={() => navigate("/main/profile")}>
@@ -58,47 +58,47 @@ export default function PageHeader() {
                             </Box>
                         </Box>
                         <div className={"divider"}/>
-                        <Box gap={"small"} pad={{ horizontal: "medium" }}>
-                            <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
+                        <Box gap={"small"} pad={{ horizontal: "medium" }} >
+                            <Box gap={"small"} align={"center"} direction={"row"} className="disabled-focus"
                                  onClick={() => {}}
                             >
-                                <TbApps />
-                                <Text size={"small"} margin={{ top: "1px" }}>
+                                <TbApps size={"22px"}/>
+                                <Text size={"17px"} margin={{ top: "1px" }}>
                                     내 앱 관리
                                 </Text>
                             </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
+                            <Box gap={"small"} align={"center"} direction={"row"} className="disabled-focus"
                                  onClick={() => {}}
                             >
-                                <TbSettings />
-                                <Text size={"small"} margin={{ top: "1px" }}>
+                                <TbSettings size={"22px"} />
+                                <Text size={"17px"} margin={{ top: "1px" }}>
                                     설정
                                 </Text>
                             </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
+                            <Box gap={"small"} align={"center"} direction={"row"} className="disabled-focus"
                                  onClick={() => signOutWithGoogle()}
                             >
-                                <TbLogout style={{ marginLeft: 2, marginRight: -2 }} />
-                                <Text size={"small"} margin={{ top: "1px" }}>
+                                <TbLogout style={{ marginLeft: 2, marginRight: -2 }} size={"22px"} />
+                                <Text size={"17px"} margin={{ top: "1px" }}>
                                     로그아웃
                                 </Text>
                             </Box>
                         </Box>
                         <div className={"divider"}/>
                         <Box gap={"small"} pad={{ horizontal: "medium" }}>
-                            <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
+                            <Box gap={"small"} align={"center"} direction={"row"} className="disabled-focus"
                                  onClick={() => {}}
                             >
-                                <TbQuestionMark />
-                                <Text size={"small"} margin={{ top: "1px" }}>
+                                <TbQuestionMark size={"22px"}/>
+                                <Text size={"17px"} margin={{ top: "1px" }}>
                                     고객 센터
                                 </Text>
                             </Box>
-                            <Box gap={"medium"} align={"center"} direction={"row"} className="disabled-focus"
+                            <Box gap={"small"} align={"center"} direction={"row"} className="disabled-focus"
                                  onClick={() => {}}
                             >
-                                <TbMailForward />
-                                <Text size={"small"} margin={{ top: "1px" }}>
+                                <TbMailForward size={"22px"}/>
+                                <Text size={"17px"} margin={{ top: "1px" }}>
                                     의견 보내기
                                 </Text>
                             </Box>
@@ -107,7 +107,7 @@ export default function PageHeader() {
                 </Layer>
             }
             { notificationListOpen &&
-                <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "24px" }} background={"#282828"}
+                <Layer animation={"slide"} position={"top-right"} margin={{ top: "85px", right: "34px" }} background={"#282828"}
                        style={{ borderRadius: 16 }}
                        onClickOutside={onNotificationListClose} onEsc={onNotificationListClose}
                        modal
@@ -115,29 +115,27 @@ export default function PageHeader() {
                 >
                     <Box pad={{ vertical: "small", horizontal: "medium" }}>
                         <Box direction={"row"} gap={"xsmall"} align={"center"} margin={{ top: "1px" }}>
-                            <TbMoodEmpty color={"#cccccc"} />
-                            <Text size={"small"} color={"text-weak"} margin={{ top: "1px" }}>
+                            <TbMoodEmpty color={"#cccccc"} size={"22px"} />
+                            <Text size={"18px"} color={"text-weak"} margin={{ top: "1px" }}>
                                 알림이 없습니다.
                             </Text>
                         </Box>
                     </Box>
                 </Layer>
             }
-            <Header pad={{ horizontal: "medium", top: "medium", bottom: "small" }} direction={"column"}>
-                <Box gap={"xlarge"} pad={{ top: "small" }} direction={"row"} width={"100%"}>
+            <Header pad={{ horizontal: "xlarge", top: "medium", bottom: "small" }} direction={"column"}>
+                <Box gap={"large"} pad={{ top: "small" }} direction={"row"} width={"100%"}>
                     <Box flex={true}>
                         <TextInput icon={<TbSearch color={"#cccccc"} style={{ marginLeft: 6 }} />} size={"small"}
                                    placeholder={"검색"}
                         />
                     </Box>
                     <Box gap={"small"} align={"center"} direction={"row"}>
-                        <Text size={"small"} margin={{ top: "2px" }}>
-                            { globalState.user.name }
-                        </Text>
-                        <Avatar src={globalState.user.photoURL} size={"32px"} style={{ border: "solid 2px #ff5a01"}}
+
+                        <Avatar src={globalState.user.photoURL} size={"36px"} style={{ border: "solid 2px #FF8341"}}
                                 onClick={onContextMenuOpen}
                         />
-                        <Button icon={<TbBell size={18} />}
+                        <Button icon={<TbBell size={22} />}
                                 className="full-rounded disabled-focus"
                                 style={{ padding: 10, marginLeft: -4, marginTop: 1 }}
                                 hoverIndicator

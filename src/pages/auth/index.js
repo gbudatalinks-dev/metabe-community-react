@@ -3,6 +3,7 @@ import { useNavigate } from "react-router-dom";
 
 import { Box, Heading, Button, Text } from "grommet";
 import { Google } from "grommet-icons";
+import { TbCircleSquare } from "react-icons/tb";
 
 import { getDocs, collection, query, where, addDoc } from "firebase/firestore";
 import { auth, provider, db } from "../../config/firebase";
@@ -94,11 +95,9 @@ export default function SignIn(props) {
     };
 
     return (
-        <Box justify="center" align="center" pad="large" fill>
-            <Box pad="large" gap="medium" background={"background-front"} round={true}>
-                <Heading level={"3"} color={"#fff"} style={{ fontFamily: "Noto Sans KR", fontWeight: 900 }}>
-                    로그인
-                </Heading>
+        <Box justify="center" align="center" pad="large" gap="small" fill>
+            <Box pad="large" gap="medium" background={"background-front"} round={true} align={"center"} >
+            <Button icon={<TbCircleSquare color={"#ffffff"} size={'60px'} />} />     
                 <Button
                     icon={<Google color={"#ffffff"} />}
                     size={"large"}

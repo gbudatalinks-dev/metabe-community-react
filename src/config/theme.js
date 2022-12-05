@@ -4,19 +4,19 @@ export const DEFAULT_THEME = {
     global: {
         colors: {
             "brand": {
-                "dark": "#ff5a01",
+                "dark": "#FF8341",
                 "light": "#85cf81"
             },
             "background": {
-                "dark": "#0a0a0a",
+                "dark": "#121212",
                 "light": "#FFFFFF"
             },
             "background-back": {
-                "dark": "#101116",
+                "dark": "#363636",
                 "light": "#EEEEEE"
             },
             "background-front": {
-                "dark": "#1c1d24",
+                "dark": "#363636",
                 "light": "#FFFFFF"
             },
             "background-contrast": {
@@ -86,7 +86,7 @@ export const DEFAULT_THEME = {
     layer: {
         background: {
             dark: "#0a0a0a",
-            light: "#FFFFFF"
+            light: "#121212"
         }
     },
     formField: {
@@ -214,7 +214,7 @@ export const DEFAULT_THEME = {
     textInput: {
         container: {
             extend: () => `
-                background: #1c1d24;
+                background: #2D2D2D;
                 border-radius: 24px;
             `
         },

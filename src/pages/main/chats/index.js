@@ -25,7 +25,7 @@ const data = [
 const MessageBox = ({ message, users, isContinuous }) => {
     const user = users[message.user];
     return (
-        <Box align={user.isMe ? "end" : "start"}>
+        <Box align={user.isMe ? "end" : "start"} >
             { user.isMe === false && isContinuous === false &&
                 <Box margin={{ bottom: "small" }} align={"center"} direction={"row"} gap={"xsmall"}>
                     <Avatar src={user.avatar} size={"small"} />
@@ -34,15 +34,16 @@ const MessageBox = ({ message, users, isContinuous }) => {
                     </Text>
                 </Box>
             }
-            <Box background={user.isMe ? "brand" : "background-front"} pad={{ horizontal: "medium", vertical: "small" }} round={"medium"} gap={"2px"}>
-                <Text size={"small"} color={"#eeeeee"}>
-                    { message.message }
-                </Text>
+                <Box background={user.isMe ? "brand" : "background-front"} pad={{ vertical: "small", horizontal: "small"}} round={"medium"} direction={"row"} align={"center"} >
+                    <Text size={"small"} color={"#eeeeee"}>
+                        { message.message }
+                    </Text>
+                </Box>
                 <Text size={"xsmall"} color={ user.isMe ? "#dddddd" : "text-xweak" } alignSelf={ user.isMe ? "end" : "start" }>
-                    { message.datetime }
+                        { message.datetime }
                 </Text>
             </Box>
-        </Box>
+
     );
 };
 
@@ -159,7 +160,7 @@ export default function Chats(props) {
                             </Box>
                         </Box>
                     </Header>
-                    <Box flex pad={"medium"} justify={"end"} gap={"small"} overflow={"scroll"} >
+                    <Box flex pad={"medium"} justify={"end"} gap={"small"} overflow={"scroll"} background={"#232323"} round={"medium"} >
                         { data.map((message, index) =>
                             <MessageBox key={index} message={message} users={users} isContinuous={index > 0 && data[index - 1].user === message.user} />
                         )}
