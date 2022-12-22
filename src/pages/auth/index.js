@@ -2,10 +2,10 @@ import React from "react";
 import { useNavigate } from "react-router-dom";
 
 import { Box, Card, CardHeader, CardBody, Heading, Button } from "grommet";
-import { Google } from "grommet-icons";
+import { Facebook, Google } from "grommet-icons";
 
 import { auth, provider } from "../../config/firebase";
-import { signInWithPopup, GoogleAuthProvider, browserSessionPersistence, signInWithCustomToken } from "firebase/auth";
+import { FacebookAuthProvider, signInWithPopup, GoogleAuthProvider, browserSessionPersistence, signInWithCustomToken } from "firebase/auth";
 
 import { AppContext } from "../../context";
 
@@ -40,6 +40,42 @@ export default function SignIn(props) {
             signInWithPopup(auth, provider).then((result) => {
                 // This gives you a Google Access Token. You can use it to access Google APIs.
                 const credential = GoogleAuthProvider.credentialFromResult(result);
+                const token = credential.accessToken;
+
+                // The signed-in user info.
+                console.log(result.user);
+                console.log("access token : " + token)
+                sessionStorage.setItem("GoogleAccessToken", token);
+
+                if (result.user !== null && result.user !== undefined) {
+                    signInAction(result.user);
+                    navigate("/main");
+                }
+                else {
+                    console.error("User is undefined");
+                }
+            });
+        }
+    };
+
+    const signInWithFacebook = () => {
+        auth.setPersistence(browserSessionPersistence);
+        //provider.addScope("https://www.googleapis.com/auth/drive");
+        const provider = new FacebookAuthProvider();
+
+        const user = auth.currentUser;
+
+        if (user) {
+            const token = sessionStorage.getItem("GoogleAccessToken");
+            console.log(user);
+            console.log("access token : " + token);
+            signInAction(user);
+            navigate("/main");
+        }
+        else {
+            signInWithPopup(auth, provider).then((result) => {
+                // This gives you a Google Access Token. You can use it to access Google APIs.
+                const credential = FacebookAuthProvider.credentialFromResult(result);
                 const token = credential.accessToken;
 
                 // The signed-in user info.
@@ -160,6 +196,7 @@ export default function SignIn(props) {
                 </CardHeader>
                 <CardBody>
                     <Button icon={<Google />} size="large" label="구글로 로그인" onClick={() => signInWithGoogle()} primary />
+                    <Button icon={<Facebook />} size="large" label="페이스북으로 로그인" onClick={() => signInWithFacebook()} primary />
                     <a href={KAKAO_AUTH_URL}>Kakao Login</a>
                     <div id='naverIdLogin'>
                     </div>
